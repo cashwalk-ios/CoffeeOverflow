@@ -12,10 +12,11 @@ public extension TargetDependency {
     static let pinLayout: TargetDependency = .package(product: "PinLayout")
     static let reactorKit: TargetDependency = .package(product: "ReactorKit")
     static let rxSwift: TargetDependency = .package(product: "RxSwift")
-    static let firebase: TargetDependency = .package(product: "firebase-ios-sdk")
-    
-        
+    static let firebaseAuth: TargetDependency = .package(product: "FirebaseAuth")
+    static let firebaseMessaging: TargetDependency = .package(product: "FirebaseMessaging")
+    static let firebaseStorage: TargetDependency = .package(product: "FirebaseStorage")
 }
+
 
 public extension Package {
     static let flexLayout: Package = .remote(
@@ -38,5 +39,6 @@ public extension Package {
         url: "https://github.com/firebase/firebase-ios-sdk.git",
         requirement: .upToNextMajor(from: "8.0.0")
       )
-   
 }
+
+

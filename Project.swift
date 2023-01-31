@@ -15,7 +15,14 @@ let target = Target(name: "CoffeeOverflow",
                     infoPlist: .file(path: "CoffeeOverflow/Info.plist"),
                     sources: "CoffeeOverflow/Sources/**",
                     resources: "CoffeeOverflow/Resources/**",
-                    dependencies: [],
+                    dependencies: [.flexLayout,
+                                   .pinLayout,
+                                   .reactorKit,
+                                   .rxSwift,
+                                   .firebaseAuth,
+                                   .firebaseMessaging,
+                                   .firebaseStorage,
+                    ],
                     settings: .settings(configurations: [
                         .debug(
                             name: "Debug",
@@ -41,12 +48,13 @@ let target = Target(name: "CoffeeOverflow",
 let project = Project(name: "CoffeeOverflow",
                       organizationName: "com.Cashwalk",
                       packages:
-                        [ .flexLayout,
-                          .pinLayout,
-                          .reactorKit,
-                          .rxSwift,
-                          .firebase],
+                        [.flexLayout,
+                         .pinLayout,
+                         .reactorKit,
+                         .rxSwift,
+                         .firebase],
                         targets: [target])
+
 
 
 
