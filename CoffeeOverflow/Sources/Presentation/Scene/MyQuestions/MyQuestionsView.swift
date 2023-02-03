@@ -11,7 +11,7 @@ import UIKit
 
 class MyQuestionsView: UIView {
 
-    fileprivate let tableView = UITableView()
+    fileprivate let tableView = UITableView(frame: .zero, style: .grouped)
     fileprivate let MyQuestionsCellTemplate = MyQuestionsCell()
     
     fileprivate var isExpanded = false
@@ -24,7 +24,6 @@ class MyQuestionsView: UIView {
 
         tableView.dataSource = dataSource
         tableView.delegate = self
-        tableView.tableFooterView = UIView()
         tableView.estimatedRowHeight = 10
         tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
         tableView.register(MyQuestionsHeader.self, forHeaderFooterViewReuseIdentifier: MyQuestionsHeader.reuseIdentifier)
