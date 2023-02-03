@@ -12,23 +12,22 @@ import UIKit
 class MyQuestionsView: UIView {
 
     fileprivate let tableView = UITableView()
-    fileprivate let methodCellTemplate = MethodCell()
+    fileprivate let MyQuestionsCellTemplate = MyQuestionsCell()
     
-    fileprivate var methods: [Method] = []
     fileprivate var isExpanded = false
     fileprivate var isSelectIndexPath: IndexPath?
-    fileprivate var indexPaths: Set<IndexPath> = []
+    fileprivate var dataSource = MyQuestionsDataSource()
     
     init() {
         super.init(frame: .zero)
         self.backgroundColor = .black
 
-        tableView.dataSource = self
+        tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         tableView.estimatedRowHeight = 10
-        tableView.register(MethodCell.self, forCellReuseIdentifier: MethodCell.reuseIdentifier)
-        tableView.register(MethodGroupHeader.self, forHeaderFooterViewReuseIdentifier: MethodGroupHeader.reuseIdentifier)
+        tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
+        tableView.register(MyQuestionsHeader.self, forHeaderFooterViewReuseIdentifier: MyQuestionsHeader.reuseIdentifier)
         tableView.backgroundColor = .black
         addSubview(tableView)
     }
@@ -38,7 +37,7 @@ class MyQuestionsView: UIView {
     }
     
     func configure(methods: [Method]) {
-        self.methods = methods
+        dataSource.methods = methods
         tableView.reloadData()
     }
     
@@ -48,41 +47,15 @@ class MyQuestionsView: UIView {
     }
 }
 
-// MARK: UITableViewDataSource, UITableViewDelegate
-extension MyQuestionsView: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return MethodGroupHeader.height
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MethodGroupHeader.reuseIdentifier) as! MethodGroupHeader
-        header.configure(title: "My Questions")
-        return header
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return methods.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MethodCell.reuseIdentifier, for: indexPath) as! MethodCell
-        cell.configure(method: methods[indexPath.row])
-        cell.state = cellIsExpanded(at: indexPath) ? .expanded : .collapsed
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // The UITableView will call the cell's sizeThatFit() method to compute the height.
-        // WANRING: You must also set the UITableView.estimatedRowHeight for this to work.
-        return UITableView.automaticDimension
-    }
+// MARK: UITableViewDelegate
+extension MyQuestionsView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! MethodCell
+        let cell = tableView.cellForRow(at: indexPath) as! MyQuestionsCell
         
         if cell.state == .collapsed {
             cell.state = .expanded
-            self.addExpandedIndexPath(indexPath)
+            dataSource.addExpandedIndexPath(indexPath)
 
             DispatchQueue.main.async {
                 tableView.beginUpdates()
@@ -90,7 +63,7 @@ extension MyQuestionsView: UITableViewDataSource, UITableViewDelegate {
             }
         } else {
             cell.state = .collapsed
-            self.removeExpandedIndexPath(indexPath)
+            dataSource.removeExpandedIndexPath(indexPath)
             
             DispatchQueue.main.async {
                 tableView.beginUpdates()
@@ -99,15 +72,13 @@ extension MyQuestionsView: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func cellIsExpanded(at indexPath: IndexPath) -> Bool {
-        return indexPaths.contains(indexPath)
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return MyQuestionsHeader.height
     }
     
-    func addExpandedIndexPath(_ indexPath: IndexPath) {
-        indexPaths.insert(indexPath)
-    }
-    
-    func removeExpandedIndexPath(_ indexPath: IndexPath) {
-        indexPaths.remove(indexPath)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyQuestionsHeader.reuseIdentifier) as! MyQuestionsHeader
+        header.configure(title: "My Questions")
+        return header
     }
 }

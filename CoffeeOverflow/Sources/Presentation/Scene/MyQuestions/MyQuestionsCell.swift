@@ -1,5 +1,5 @@
 //
-//  MethodCell.swift
+//  MyQuestionsCell.swift
 //  CoffeeOverflow
 //
 //  Created by lovecat on 2023/02/02.
@@ -10,14 +10,14 @@ import UIKit
 import PinLayout
 import FlexLayout
 
-class MethodCell: UITableViewCell {
+class MyQuestionsCell: UITableViewCell {
     
     enum CellState {
         case collapsed
         case expanded
     }
     
-    static let reuseIdentifier = "MethodCell"
+    static let reuseIdentifier = "MyQuestionsCell"
     fileprivate let padding: CGFloat = 10
     
     fileprivate let rootFlexContainer: UIView = UIView()
@@ -45,13 +45,6 @@ class MethodCell: UITableViewCell {
         separatorInset = .zero
         
         iconImageView.image = UIImage(named: "icArrowDownGray")
-        let iconImageView1 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView2 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView3 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView4 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView5 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView6 = UIImageView(image: UIImage(named: "icArrowDownGray"))
-        let iconImageView7 = UIImageView(image: UIImage(named: "icArrowDownGray"))
         
         rootFlexContainer.backgroundColor = .black
         contentView.addSubview(rootFlexContainer)
@@ -103,13 +96,10 @@ class MethodCell: UITableViewCell {
                 }
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        flex.addItem(iconImageView1).size(50)
-                        flex.addItem(iconImageView2).size(50)
-                        flex.addItem(iconImageView3).size(50)
-                        flex.addItem(iconImageView4).size(50)
-                        flex.addItem(iconImageView5).size(50)
-                        flex.addItem(iconImageView6).size(50)
-                        flex.addItem(iconImageView7).size(50)
+                        for _ in 1...7 {
+                            let iconImageView = UIImageView(image: UIImage(named: "icArrowDownGray"))
+                            flex.addItem(iconImageView).size(50)
+                        }
                     }
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                         flex.addItem(deleteButton).size(50)

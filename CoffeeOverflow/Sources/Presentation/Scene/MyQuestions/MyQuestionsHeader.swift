@@ -1,5 +1,5 @@
 //
-//  MethodGroupHeader.swift
+//  MyQuestionsHeader.swift
 //  CoffeeOverflow
 //
 //  Created by lovecat on 2023/02/02.
@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-class MethodGroupHeader: UITableViewHeaderFooterView {
-    static let reuseIdentifier = "MyQuestions"
+class MyQuestionsHeader: UITableViewHeaderFooterView {
+    static let reuseIdentifier = "MyQuestionsHeader"
     static let height: CGFloat = 50
     
     fileprivate let titleLabel = UILabel()
