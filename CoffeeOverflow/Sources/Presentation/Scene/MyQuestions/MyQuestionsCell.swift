@@ -97,8 +97,18 @@ class MyQuestionsCell: UITableViewCell {
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
                         for _ in 1...7 {
-                            let iconImageView = UIImageView(image: UIImage(named: "icArrowDownGray"))
-                            flex.addItem(iconImageView).size(50)
+//                            let iconImageView = UIImageView(image: UIImage(named: "icArrowDownGray"))
+//                            flex.addItem(iconImageView).size(50)
+                            
+                            let iconImage = UIImage(named: "icArrowDownGray")
+                            let deleteButton = UIButton()
+                            deleteButton.backgroundColor = .black
+                            deleteButton.setBackgroundImage(iconImage, for: .normal)
+//                            deleteButton.setTitle("삭제", for: .normal)
+//                            deleteButton.setTitleColor(.red, for: .normal)
+//                            deleteButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+                            deleteButton.layer.cornerRadius = 10
+                            flex.addItem(deleteButton).size(50)
                         }
                     }
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
