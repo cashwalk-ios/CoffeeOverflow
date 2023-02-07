@@ -17,7 +17,6 @@ public extension TargetDependency {
     static let firebaseStorage: TargetDependency = .package(product: "FirebaseStorage")
 }
 
-
 public extension Package {
     static let flexLayout: Package = .remote(
         url: "https://github.com/layoutBox/FlexLayout.git",
