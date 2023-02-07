@@ -25,7 +25,7 @@ class LoginView: UIView {
 
     private(set) var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "NudgeCup") ?? UIImage()
+        imageView.image = CoffeeOverflowAsset.nudgeCup
         return imageView
     }()
 
