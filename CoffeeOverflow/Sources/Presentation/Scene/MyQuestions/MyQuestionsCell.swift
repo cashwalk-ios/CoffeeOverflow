@@ -107,7 +107,7 @@ class MyQuestionsCell: UITableViewCell {
                     flex.addItem().height(10)
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
                         for _ in 1...7 {
-                            let iconImage = UIImage(named: "icArrowDownGray")
+                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
                             let deleteButton = UIButton()
                             deleteButton.backgroundColor = .black
                             deleteButton.setBackgroundImage(iconImage, for: .normal)
