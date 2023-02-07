@@ -10,23 +10,24 @@ import Foundation
 import FirebaseAuth
 
 struct AppDependency {
-//    let mockViewController: MockViewController
-    let myQuestionsViewController: MyQuestionsViewController
+    let viewController: LoginViewController
 }
 
 extension AppDependency {
     static func resolve() -> AppDependency {
+    
+        let mockRepository = DefaultMockRepository()
+        let mockUsecase = MockUseCase(repository: mockRepository)
+        let mockReactor = MockReactor(useCase: MockUseCase(repository: mockRepository))
+        let mockViewControllor = MockViewController(reactor: mockReactor)
         
-//        let mockRepository = DefaultMockRepository()
-//        let mockReactor = MockReactor(useCase: MockUseCase(repository: mockRepository))
-//        let mockViewControllor = MockViewController(reactor: mockReactor)
-//
-//        return AppDependency(mockViewController: mockViewControllor)
+        let mainReactor = MainReactor(useCase: mockUsecase)
+        let mainViewController = MainViewController(reactor: mainReactor)
         
-        let myQuestionsRepository = DefaultMyQuestionRepository()
-        let myQuestionsReactor = MyQuestionsViewReactor(useCase: MyQuestionsUseCase(repository: myQuestionsRepository))
-        let myQuestionsViewControllor = MyQuestionsViewController(reactor: myQuestionsReactor)
+        let loginReactor = LoginReactor(useCase: mockUsecase)
+        let loginViewController = LoginViewController(reactor: loginReactor,
+                                                      view: mainViewController)
         
-        return AppDependency(myQuestionsViewController: myQuestionsViewControllor)
+        return AppDependency(viewController: loginViewController)
     }
 }
