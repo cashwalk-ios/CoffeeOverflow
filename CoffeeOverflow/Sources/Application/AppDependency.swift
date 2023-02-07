@@ -15,7 +15,7 @@ struct AppDependency {
 
 extension AppDependency {
     static func resolve() -> AppDependency {
-        
+    
         let mockRepository = DefaultMockRepository()
         let mockUsecase = MockUseCase(repository: mockRepository)
         let mockReactor = MockReactor(useCase: MockUseCase(repository: mockRepository))
