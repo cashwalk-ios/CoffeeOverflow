@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PinLayout
 
 class MyQuestionsView: UIView {
 
@@ -42,7 +43,7 @@ class MyQuestionsView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        tableView.pin.all()
+        tableView.pin.all(safeAreaInsets)
     }
 }
 
