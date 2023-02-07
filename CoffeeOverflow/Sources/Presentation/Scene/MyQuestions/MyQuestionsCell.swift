@@ -85,32 +85,29 @@ class MyQuestionsCell: UITableViewCell {
         choiceButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         choiceButton.layer.cornerRadius = 10
 
-        rootFlexContainer.flex.paddingBottom(20).define { (flex) in
+        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(10).define { (flex) in
             flex.addItem(bgView).direction(.column).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                     flex.addItem(nameLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(ParticipantsLabel)//.marginLeft(padding)//.grow(1)
-                        flex.addItem(iconImageView).size(30)//.marginRight(padding)
+                        flex.addItem(ParticipantsLabel)
+                        flex.addItem(iconImageView).size(30)
                     }
                 }
+                flex.addItem().height(10)
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
                         for _ in 1...7 {
-//                            let iconImageView = UIImageView(image: UIImage(named: "icArrowDownGray"))
-//                            flex.addItem(iconImageView).size(50)
-                            
                             let iconImage = UIImage(named: "icArrowDownGray")
                             let deleteButton = UIButton()
                             deleteButton.backgroundColor = .black
                             deleteButton.setBackgroundImage(iconImage, for: .normal)
-//                            deleteButton.setTitle("삭제", for: .normal)
-//                            deleteButton.setTitleColor(.red, for: .normal)
-//                            deleteButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
                             deleteButton.layer.cornerRadius = 10
-                            flex.addItem(deleteButton).size(50)
+                            flex.addItem(deleteButton).marginBottom(5).marginRight(5).size(45)
+//                            flex.addItem().width(5)
                         }
                     }
+                    flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                         flex.addItem(deleteButton).size(50)
                         flex.addItem().width(10)
