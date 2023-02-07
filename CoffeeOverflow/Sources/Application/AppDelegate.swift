@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = UIViewController()
         viewController.view.backgroundColor = .white
-        window?.rootViewController = AppDependency.resolve().mockViewController
+        window?.rootViewController = AppDependency.resolve().viewController
         window?.makeKeyAndVisible()
         
 
