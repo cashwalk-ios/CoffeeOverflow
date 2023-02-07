@@ -44,7 +44,7 @@ class MyQuestionsCell: UITableViewCell {
         selectionStyle = .none
         separatorInset = .zero
         
-        iconImageView.image = UIImage(named: "icArrowDownGray")
+        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
         rootFlexContainer.backgroundColor = .black
         contentView.addSubview(rootFlexContainer)
@@ -98,7 +98,7 @@ class MyQuestionsCell: UITableViewCell {
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
                         for _ in 1...7 {
-                            let iconImage = UIImage(named: "icArrowDownGray")
+                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
                             let deleteButton = UIButton()
                             deleteButton.backgroundColor = .black
                             deleteButton.setBackgroundImage(iconImage, for: .normal)
@@ -135,11 +135,11 @@ class MyQuestionsCell: UITableViewCell {
     func isExpanded(_ isExpanded: Bool) {
         if isExpanded {
             detailView.flex.display(.flex)
-            iconImageView.image = UIImage(named: "icArrowUpGray")
+            iconImageView.image = CoffeeOverflowAsset.icArrowUpGray.image
             layout()
         } else {
             detailView.flex.display(.none)
-            iconImageView.image = UIImage(named: "icArrowDownGray")
+            iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
             layout()
         }
     }
