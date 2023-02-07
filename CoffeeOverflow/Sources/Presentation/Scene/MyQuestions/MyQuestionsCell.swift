@@ -47,8 +47,7 @@ class MyQuestionsCell: UITableViewCell {
         selectionStyle = .none
         separatorInset = .zero
         
-        participantsView.collectionView.delegate = self
-        participantsView.collectionView.dataSource = self
+        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
         participantsView.configure(profile: [
             Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
@@ -120,7 +119,7 @@ class MyQuestionsCell: UITableViewCell {
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
                         for _ in 1...7 {
-                            let iconImage = UIImage(named: "icArrowDownGray")
+                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
                             let deleteButton = UIButton()
                             deleteButton.backgroundColor = .black
                             deleteButton.setBackgroundImage(iconImage, for: .normal)
