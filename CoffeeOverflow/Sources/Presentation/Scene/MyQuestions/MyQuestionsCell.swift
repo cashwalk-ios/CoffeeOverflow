@@ -117,25 +117,27 @@ class MyQuestionsCell: UITableViewCell {
         choiceButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
         choiceButton.layer.cornerRadius = 10
 
-        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
-            flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
+        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(10).define { (flex) in
+            flex.addItem(bgView).direction(.column).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                     flex.addItem(questionLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(participantsCountLabel)
+                        flex.addItem(ParticipantsLabel)
                         flex.addItem(iconImageView).size(30)
                     }
                 }
+                flex.addItem().height(10)
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem().height(10)
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        for _ in 1...participantsCount {
-                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
-                            let participantsButton = UIButton()
-                            participantsButton.backgroundColor = .black
-                            participantsButton.setBackgroundImage(iconImage, for: .normal)
-                            participantsButton.layer.cornerRadius = 10
-                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
+                        for _ in 1...7 {
+                            let iconImage = UIImage(named: "icArrowDownGray")
+                            let deleteButton = UIButton()
+                            deleteButton.backgroundColor = .black
+                            deleteButton.setBackgroundImage(iconImage, for: .normal)
+                            deleteButton.layer.cornerRadius = 10
+                            flex.addItem(deleteButton).marginBottom(5).marginRight(5).size(45)
+//                            flex.addItem().width(5)
                         }
                     }
                     flex.addItem().height(10)
