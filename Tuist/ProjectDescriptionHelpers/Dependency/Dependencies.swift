@@ -12,6 +12,7 @@ public extension TargetDependency {
     static let pinLayout: TargetDependency = .package(product: "PinLayout")
     static let reactorKit: TargetDependency = .package(product: "ReactorKit")
     static let rxSwift: TargetDependency = .package(product: "RxSwift")
+    static let rxCocoa: TargetDependency = .package(product: "RxCocoa")
     static let firebaseAuth: TargetDependency = .package(product: "FirebaseAuth")
     static let firebaseMessaging: TargetDependency = .package(product: "FirebaseMessaging")
     static let firebaseStorage: TargetDependency = .package(product: "FirebaseStorage")
