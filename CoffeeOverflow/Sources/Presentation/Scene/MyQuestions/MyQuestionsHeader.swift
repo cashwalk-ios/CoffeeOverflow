@@ -11,7 +11,7 @@ import UIKit
 
 class MyQuestionsHeader: UITableViewHeaderFooterView {
     static let reuseIdentifier = "MyQuestionsHeader"
-    static let height: CGFloat = 50
+    static let height: CGFloat = 100
     
     fileprivate let titleLabel = UILabel()
     
@@ -37,6 +37,6 @@ class MyQuestionsHeader: UITableViewHeaderFooterView {
         super.layoutSubviews()
         
         // Center the label vertically. Note that we don't need to specify the size, it has already be adjusted in init().
-        titleLabel.pin.horizontally(pin.safeArea.left + 12).vCenter()
+        titleLabel.pin.horizontally(pin.safeArea.left + 20).vCenter()
     }
 }
