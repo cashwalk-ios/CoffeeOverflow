@@ -10,7 +10,7 @@ import Foundation
 import FirebaseAuth
 
 struct AppDependency {
-    let viewController: LoginViewController
+    let viewController: MyQuestionsViewController
 }
 
 extension AppDependency {
@@ -24,10 +24,16 @@ extension AppDependency {
         let mainReactor = MainReactor(useCase: mockUsecase)
         let mainViewController = MainViewController(reactor: mainReactor)
         
-        let loginReactor = LoginReactor(useCase: mockUsecase)
-        let loginViewController = LoginViewController(reactor: loginReactor,
-                                                      view: mainViewController)
+//        let loginReactor = LoginReactor(useCase: mockUsecase)
+//        let loginViewController = LoginViewController(reactor: loginReactor,
+//                                                      view: mainViewController)
+//
+//        return AppDependency(viewController: loginViewController)
         
-        return AppDependency(viewController: loginViewController)
+        let myQuestionsRepository = DefaultMyQuestionRepository()
+        let myQuestionsReactor = MyQuestionsViewReactor(useCase: MyQuestionsUseCase(repository: myQuestionsRepository))
+        let myQuestionsViewControllor = MyQuestionsViewController(reactor: myQuestionsReactor)
+        
+        return AppDependency(viewController: myQuestionsViewControllor)
     }
 }

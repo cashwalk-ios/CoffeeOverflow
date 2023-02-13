@@ -22,10 +22,12 @@ class MyQuestionsCell: UITableViewCell {
     
     fileprivate let rootFlexContainer: UIView = UIView()
     fileprivate let detailView = UIView()
-    fileprivate let nameLabel = UILabel()
-    fileprivate let ParticipantsLabel = UILabel()
+    fileprivate let questionLabel = UILabel()
+    fileprivate let participantsCountLabel = UILabel()
     fileprivate let descriptionLabel = UILabel()
     fileprivate let iconImageView = UIImageView()
+    var deleteButton = UIButton()
+    var choiceButton = UIButton()
     
     var state: CellState = .collapsed {
         didSet {
@@ -57,54 +59,59 @@ class MyQuestionsCell: UITableViewCell {
         let detailTopView = UIView()
         let detailBottomView = UIView()
         
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        nameLabel.textColor = .white
-        nameLabel.lineBreakMode = .byTruncatingTail
-        nameLabel.numberOfLines = 2
+        questionLabel.font = UIFont.boldSystemFont(ofSize: 12)
+        questionLabel.textColor = .white
+        questionLabel.lineBreakMode = .byTruncatingTail
+        questionLabel.numberOfLines = 2
         
-        ParticipantsLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        ParticipantsLabel.textColor = .white
-        ParticipantsLabel.lineBreakMode = .byTruncatingTail
-        ParticipantsLabel.text = "7명참여중"
+        let participantsCount = 5
+        
+        participantsCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
+        participantsCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
+        participantsCountLabel.lineBreakMode = .byTruncatingTail
+        participantsCountLabel.text = "0명참여중"
+        
+        participantsCountLabel.text = "\(participantsCount)명참여중"
+        var textString = ""
+        if let temp = participantsCountLabel.text {
+            textString = temp
+        }
+        let attributedStr = NSMutableAttributedString(string: textString)
+        attributedStr.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 8, weight: .regular), range: (textString as NSString).range(of: "명참여중"))
+        attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
+        participantsCountLabel.attributedText = attributedStr
         
         descriptionLabel.font = UIFont.systemFont(ofSize: 12)
         descriptionLabel.textColor = .white
         descriptionLabel.numberOfLines = 0
         
-        let deleteButton = UIButton(type: .system)
         deleteButton.backgroundColor = .black
-        deleteButton.setTitle("삭제", for: .normal)
-        deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        deleteButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
         deleteButton.layer.cornerRadius = 10
         
-        let choiceButton = UIButton(type: .system)
         choiceButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
-        choiceButton.setTitle("채택", for: .normal)
-        choiceButton.setTitleColor(.white, for: .normal)
-        choiceButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        choiceButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
         choiceButton.layer.cornerRadius = 10
 
-        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(10).define { (flex) in
-            flex.addItem(bgView).direction(.column).padding(12).define{ (flex) in
+        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
+            flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
-                    flex.addItem(nameLabel).shrink(1)
+                    flex.addItem(questionLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(ParticipantsLabel)
+                        flex.addItem(participantsCountLabel)
                         flex.addItem(iconImageView).size(30)
                     }
                 }
-                flex.addItem().height(10)
                 flex.addItem(detailView).direction(.column).define{ (flex) in
+                    flex.addItem().height(10)
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        for _ in 1...7 {
+                        for _ in 1...participantsCount {
                             let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
-                            let deleteButton = UIButton()
-                            deleteButton.backgroundColor = .black
-                            deleteButton.setBackgroundImage(iconImage, for: .normal)
-                            deleteButton.layer.cornerRadius = 10
-                            flex.addItem(deleteButton).marginBottom(5).marginRight(5).size(45)
-//                            flex.addItem().width(5)
+                            let participantsButton = UIButton()
+                            participantsButton.backgroundColor = .black
+                            participantsButton.setBackgroundImage(iconImage, for: .normal)
+                            participantsButton.layer.cornerRadius = 10
+                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
                         }
                     }
                     flex.addItem().height(10)
@@ -124,8 +131,8 @@ class MyQuestionsCell: UITableViewCell {
     }
     
     func configure(method: Method) {
-        nameLabel.text = method.name
-        nameLabel.flex.markDirty()
+        questionLabel.text = method.name
+        questionLabel.flex.markDirty()
         
         descriptionLabel.text = method.description
         descriptionLabel.flex.markDirty()
