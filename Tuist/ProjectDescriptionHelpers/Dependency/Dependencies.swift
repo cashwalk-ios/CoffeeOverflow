@@ -17,6 +17,7 @@ public extension TargetDependency {
     static let firebaseMessaging: TargetDependency = .package(product: "FirebaseMessaging")
     static let firebaseStorage: TargetDependency = .package(product: "FirebaseStorage")
     static let moya: TargetDependency = .package(product: "Moya")
+    static let rxMoya: TargetDependency = .package(product: "RxMoya")
 }
 
 public extension Package {
