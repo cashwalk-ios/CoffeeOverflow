@@ -10,7 +10,7 @@ import Foundation
 import FirebaseAuth
 
 struct AppDependency {
-    let viewController: LoginViewController
+    let viewController: MyQuestionsViewController
 }
 
 extension AppDependency {
