@@ -19,29 +19,12 @@ let target = Target(name: "CoffeeOverflow",
                                    .pinLayout,
                                    .reactorKit,
                                    .rxSwift,
+                                   .rxCocoa,
                                    .firebaseAuth,
                                    .firebaseMessaging,
                                    .firebaseStorage,
                     ],
-                    settings: .settings(configurations: [
-                        .debug(
-                            name: "Debug",
-                            settings: SettingsDictionary()
-                                .manualCodeSigning(identity: "iPhone Developer", provisioningProfileSpecifier: "dev_forWildcard")
-                                .swiftActiveCompilationConditions("DEBUG")
-                        ),
-                        .release(
-                            name: "Inhouse",
-                            settings: SettingsDictionary()
-                                .manualCodeSigning(identity: "iPhone Distribution", provisioningProfileSpecifier: "dev_forWildcard")
-                                .swiftActiveCompilationConditions("INHOUSE")
-                        ),
-                        .release(
-                            name: "Release",
-                            settings: SettingsDictionary()
-                                .manualCodeSigning(identity: "iPhone Distribution", provisioningProfileSpecifier: "dev_forWildcard")
-                        )
-                    ])
+                    settings: .settings(base: ["GCC_PREPROCESSOR_DEFINITIONS" : "FLEXLAYOUT_SWIFT_PACKAGE=1"])
                 )
 
 
