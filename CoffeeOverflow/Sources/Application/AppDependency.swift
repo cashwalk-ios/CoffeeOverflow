@@ -64,6 +64,16 @@ extension AppDependency {
             view: mainViewController
         )
         
-        return AppDependency(viewController: loginViewController)
+//        let loginReactor = LoginReactor(useCase: mockUsecase)
+//        let loginViewController = LoginViewController(reactor: loginReactor,
+//                                                      view: mainViewController)
+//
+//        return AppDependency(viewController: loginViewController)
+        
+        let myQuestionsRepository = DefaultMyQuestionRepository()
+        let myQuestionsReactor = MyQuestionsViewReactor(useCase: MyQuestionsUseCase(repository: myQuestionsRepository))
+        let myQuestionsViewControllor = MyQuestionsViewController(reactor: myQuestionsReactor)
+        
+        return AppDependency(viewController: myQuestionsViewControllor)
     }
 }

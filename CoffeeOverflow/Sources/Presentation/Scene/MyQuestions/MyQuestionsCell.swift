@@ -28,7 +28,6 @@ class MyQuestionsCell: UITableViewCell {
     fileprivate let iconImageView = UIImageView()
     var deleteButton = UIButton()
     var choiceButton = UIButton()
-    fileprivate var participantsView = ParticipantsView()
     
     var state: CellState = .collapsed {
         didSet {
@@ -77,7 +76,7 @@ class MyQuestionsCell: UITableViewCell {
         questionLabel.lineBreakMode = .byTruncatingTail
         questionLabel.numberOfLines = 2
         
-        let participantsCount = 7
+        let participantsCount = 5
         
         participantsCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
         participantsCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
@@ -106,26 +105,25 @@ class MyQuestionsCell: UITableViewCell {
         choiceButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
         choiceButton.layer.cornerRadius = 10
 
-        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(10).define { (flex) in
-            flex.addItem(bgView).direction(.column).padding(12).define{ (flex) in
+        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
+            flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                     flex.addItem(questionLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(ParticipantsLabel)
+                        flex.addItem(participantsCountLabel)
                         flex.addItem(iconImageView).size(30)
                     }
                 }
-                flex.addItem().height(10)
                 flex.addItem(detailView).direction(.column).define{ (flex) in
+                    flex.addItem().height(10)
                     flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        for _ in 1...7 {
+                        for _ in 1...participantsCount {
                             let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
-                            let deleteButton = UIButton()
-                            deleteButton.backgroundColor = .black
-                            deleteButton.setBackgroundImage(iconImage, for: .normal)
-                            deleteButton.layer.cornerRadius = 10
-                            flex.addItem(deleteButton).marginBottom(5).marginRight(5).size(45)
-//                            flex.addItem().width(5)
+                            let participantsButton = UIButton()
+                            participantsButton.backgroundColor = .black
+                            participantsButton.setBackgroundImage(iconImage, for: .normal)
+                            participantsButton.layer.cornerRadius = 10
+                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
                         }
                     }
                     flex.addItem().height(10)
