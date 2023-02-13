@@ -16,6 +16,7 @@ public extension TargetDependency {
     static let firebaseAuth: TargetDependency = .package(product: "FirebaseAuth")
     static let firebaseMessaging: TargetDependency = .package(product: "FirebaseMessaging")
     static let firebaseStorage: TargetDependency = .package(product: "FirebaseStorage")
+    static let moya: TargetDependency = .package(product: "Moya")
 }
 
 public extension Package {
@@ -38,6 +39,10 @@ public extension Package {
     static let firebase: Package = .remote(
         url: "https://github.com/firebase/firebase-ios-sdk.git",
         requirement: .upToNextMajor(from: "8.0.0")
+      )
+    static let moya: Package = .remote(
+        url: "https://github.com/Moya/Moya.git",
+        requirement: .upToNextMajor(from: "15.0.0")
       )
 }
 

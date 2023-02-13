@@ -35,7 +35,8 @@ let project = Project(name: "CoffeeOverflow",
                          .pinLayout,
                          .reactorKit,
                          .rxSwift,
-                         .firebase],
+                         .firebase,
+                         .moya],
                         targets: [target])
 
 
