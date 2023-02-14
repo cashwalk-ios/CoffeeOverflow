@@ -17,29 +17,25 @@ enum Collection: String {
 
 class FirestoreDataSourceImpl: FirestoreDataSource {
 
-    let db = Firestore.firestore()
+    private let db = Firestore.firestore()
     
-    func selectAnswerer(question: QuestionDTO) async {
+    func selectAnswerer(question: QuestionDTO) async throws {
         guard let oid = question.id else { return }
-        do { try await db.collection(Collection.asks.rawValue).document(oid).setData(from: question, encoder: Firestore.Encoder())
-        } catch { }
+        try await db.collection(Collection.asks.rawValue).document(oid).setData(from: question, encoder: Firestore.Encoder())
     }
     
-    func deleteQuestion(question: QuestionDTO) async {
+    func deleteAsk(question: QuestionDTO) async throws{
         guard let id = question.id else { return }
-        do {
-            try await db.collection(Collection.asks.rawValue).document(id).delete()
-        } catch { }
+        try await db.collection(Collection.asks.rawValue).document(id).delete()
+        
     }
     
-    func insertUser(user: UserDTO) async {
-        do {
+    func insertUser(user: UserDTO) async throws{
             try await db.collection(Collection.users.rawValue).addDocument(from: user, encoder: Firestore.Encoder())
-        } catch { }
     }
     
-    func fetchQuestions() async throws -> [QuestionDTO]? {
-        guard let snapshot = try? await db.collection(Collection.asks.rawValue).getDocuments() else { return nil }
+    func fetchAsks() async throws -> [QuestionDTO] {
+        let snapshot = try await db.collection(Collection.asks.rawValue).getDocuments()
         return snapshot.documents.compactMap { document in
             try? document.data(as: QuestionDTO.self)
         }
