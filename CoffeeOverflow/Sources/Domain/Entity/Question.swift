@@ -1,6 +1,7 @@
 import Foundation
 
 struct Question {
+    let id: String
     let acceptedAnswerer: String?
     let channelId: String
     let isAccepted: Bool

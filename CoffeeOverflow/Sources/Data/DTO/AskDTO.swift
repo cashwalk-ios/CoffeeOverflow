@@ -32,6 +32,7 @@ struct AskDTO: Codable {
 extension AskDTO {
     func asQuestion() -> Question {
         return Question(
+            id: self.id ?? "",
             acceptedAnswerer: self.acceptedAnswerer,
             channelId: self.channelId,
             isAccepted: self.isAccepted,
