@@ -23,6 +23,8 @@ let target = Target(name: "CoffeeOverflow",
                                    .firebaseAuth,
                                    .firebaseMessaging,
                                    .firebaseStorage,
+                                   .firebaseStoreSwift,
+                                   .firebaseStore
                     ],
                     settings: .settings(base: ["GCC_PREPROCESSOR_DEFINITIONS" : "FLEXLAYOUT_SWIFT_PACKAGE=1"])
                 )
