@@ -13,7 +13,6 @@ struct AskDTO: Codable {
     @DocumentID var id: String?
     let acceptedAnswerer: String?
     let channelId: String
-    let isAccepted: Bool
     let text: String
     let ts: String
     let userId: String
@@ -23,7 +22,6 @@ struct AskDTO: Codable {
         case text, ts
         case acceptedAnswerer = "accepted_answerer"
         case channelId = "channel_id"
-        case isAccepted = "is_accepted"
         case userId = "user_id"
     }
 }
@@ -35,7 +33,6 @@ extension AskDTO {
             id: self.id ?? "",
             acceptedAnswerer: self.acceptedAnswerer,
             channelId: self.channelId,
-            isAccepted: self.isAccepted,
             text: self.text,
             timestamp: self.ts,
             userId: self.userId

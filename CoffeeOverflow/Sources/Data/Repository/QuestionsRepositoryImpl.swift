@@ -16,7 +16,6 @@ class QuestionsRepositoryImpl: QuestionsRepository {
         try self.firestoreDataSource.putAsk(ask: AskDTO(
             acceptedAnswerer: question.acceptedAnswerer,
             channelId: question.channelId,
-            isAccepted: question.isAccepted,
             text: question.text,
             ts: question.timestamp,
             userId: question.userId
