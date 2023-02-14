@@ -11,7 +11,7 @@ class CheckIsSignedInUseCase {
     }
     
     func excute() -> Bool {
-        self.userRepository.fetchSlackId() != nil
+        return self.userRepository.fetchSlackId() != nil
     }
 
 }

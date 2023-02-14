@@ -29,7 +29,7 @@ class UserRepositoryImpl: UserReposiotry {
     }
 
     func lookupSlackUserByEmail(email: String) -> Single<User> {
-        self.slackDataSource.lookupUserByEmail(email: email)
+        return self.slackDataSource.lookupUserByEmail(email: email)
             .map { $0.asUser() }
     }
 
@@ -38,7 +38,7 @@ class UserRepositoryImpl: UserReposiotry {
     }
 
     func fetchSlackId() -> String? {
-        self.userDefaultsDataSource.fetchSlackId()
+        return self.userDefaultsDataSource.fetchSlackId()
     }
 
 }
