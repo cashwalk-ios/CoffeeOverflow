@@ -7,4 +7,5 @@ protocol UserReposiotry {
     func lookupSlackUserByEmail(email: String) -> Single<User>
     func saveSlackId(_ slackId: String)
     func fetchSlackId() -> String?
+    func fetchUsers() -> Single<[User]>
 }

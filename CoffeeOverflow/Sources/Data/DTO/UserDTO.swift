@@ -23,3 +23,14 @@ struct UserDTO: Codable {
         case slackId = "slack_id"
     }
 }
+
+// MARK: - To Domain
+extension UserDTO {
+    func asUser() -> User {
+        return User(
+            slackId: self.slackId,
+            email: self.email,
+            profileImage: URL(string: self.profileImage)
+        )
+    }
+}
