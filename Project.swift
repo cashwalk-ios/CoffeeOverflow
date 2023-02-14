@@ -39,6 +39,10 @@ let project = Project(name: "CoffeeOverflow",
                          .rxSwift,
                          .firebase,
                          .moya],
+                      settings: .settings(configurations: [
+                        .debug(name: "Debug", xcconfig: .relativeToRoot("Configuration/env.xcconfig")),
+                        .release(name: "Release", xcconfig: .relativeToRoot("Configuration/env.xcconfig"))
+                      ]),
                         targets: [target])
 
 

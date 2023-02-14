@@ -62,7 +62,8 @@ extension SlackAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        return ["Authorization": "Bearer xoxb-1988873761187-4692591182289-vfvQSZelJ14svfkNIvcF7UGi"]
+        guard let slackBotToken = EnvironmentManager.slackBotToken else { return nil }
+        return ["Authorization": "Bearer \(slackBotToken)"]
     }
 
 }
