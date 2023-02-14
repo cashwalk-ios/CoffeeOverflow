@@ -4,9 +4,11 @@ import RxSwift
 
 class QuestionsRepositoryImpl: QuestionsRepository {
     
+    private let slackDataSource: SlackDataSource
     private let firestoreDataSource: FirestoreDataSource
 
-    init(firestoreDataSource: FirestoreDataSource) {
+    init(slackDataSource: SlackDataSource, firestoreDataSource: FirestoreDataSource) {
+        self.slackDataSource = slackDataSource
         self.firestoreDataSource = firestoreDataSource
     }
     
@@ -48,6 +50,10 @@ class QuestionsRepositoryImpl: QuestionsRepository {
             return Disposables.create()
         }
     }
-    
-    
+
+    func fetchAnswerOfQuestion(channel: String, timestamp: String) -> Single<[Answer]> {
+        return self.slackDataSource.fetchConversaionsReplies(channel: channel, ts: timestamp)
+            .map { $0.asAnswerArray() }
+    }
+
 }
