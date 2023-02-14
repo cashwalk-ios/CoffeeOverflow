@@ -72,7 +72,7 @@ extension LookupUserByEmailResponse {
         return User(
             slackId: self.user.id,
             email: self.user.profile.email,
-            profileImage: URL(string: self.user.profile.image48)!
+            profileImage: URL(string: self.user.profile.image48)
         )
     }
 }
