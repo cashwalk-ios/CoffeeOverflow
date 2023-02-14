@@ -9,11 +9,12 @@
 import UIKit
 import FlexLayout
 import PinLayout
+import GoogleSignIn
 
 class LoginView: UIView {
 
     fileprivate let rootFlexContainer = UIView()
-
+    
     private(set) var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Coffee Overflow"
@@ -29,14 +30,11 @@ class LoginView: UIView {
         return imageView
     }()
 
-    private(set) var loginButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle(" Sign Up with Google", for: .normal)
-        button.setTitleColor(.gray, for: .normal)
-        button.backgroundColor = .white
-        button.setImage(CoffeeOverflowAsset.googleLogo.image, for: .normal)
+    private(set) var loginButton: GIDSignInButton = {
+        let button = GIDSignInButton()
+        button.style = .wide
+        button.colorScheme = .light
         button.layer.cornerRadius = 10
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         return button
     }()
     
