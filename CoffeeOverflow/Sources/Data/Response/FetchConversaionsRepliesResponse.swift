@@ -17,7 +17,8 @@ extension FetchConversaionsRepliesResponse {
     struct Message: Decodable {
         let type: String
         let subtype: String?
-        let text, ts, botID: String
+        let text, ts: String
+        let botID: String?
         let blocks: [Block]
         let threadTs: String
         let replyCount, replyUsersCount: Int?
@@ -26,6 +27,7 @@ extension FetchConversaionsRepliesResponse {
         let isLocked, subscribed: Bool?
         let user, appID, team: String?
         let botProfile: BotProfile?
+        let clientMsgID: String?
         
         enum CodingKeys: String, CodingKey {
             case type, subtype, text, ts
@@ -41,6 +43,7 @@ extension FetchConversaionsRepliesResponse {
             case appID = "app_id"
             case team
             case botProfile = "bot_profile"
+            case clientMsgID = "client_msg_id"
         }
     }
     
