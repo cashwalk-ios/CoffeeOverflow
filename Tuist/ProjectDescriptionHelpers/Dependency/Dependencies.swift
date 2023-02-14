@@ -20,6 +20,7 @@ public extension TargetDependency {
     static let firebaseStore: TargetDependency = .package(product: "FirebaseFirestore")
     static let moya: TargetDependency = .package(product: "Moya")
     static let rxMoya: TargetDependency = .package(product: "RxMoya")
+    static let googleSingIn: TargetDependency = .package(product: "GoogleSignIn")
 }
 
 public extension Package {
@@ -47,6 +48,7 @@ public extension Package {
         url: "https://github.com/Moya/Moya.git",
         requirement: .upToNextMajor(from: "15.0.0")
     )
+    static let googleSingIn: Package = .remote(url: "https://github.com/google/GoogleSignIn-iOS", requirement: .upToNextMajor(from: "7.0.0"))
 }
 
 
