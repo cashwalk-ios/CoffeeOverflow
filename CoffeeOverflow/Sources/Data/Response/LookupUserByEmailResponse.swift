@@ -15,7 +15,8 @@ extension LookupUserByEmailResponse {
         let isAdmin, isOwner, isPrimaryOwner, isRestricted: Bool
         let isUltraRestricted, isBot: Bool
         let updated: Int
-        let isAppUser, has2Fa: Bool
+        let isAppUser: Bool
+        let whoCanShareContactCard: String
         
         enum CodingKeys: String, CodingKey {
             case id
@@ -34,7 +35,7 @@ extension LookupUserByEmailResponse {
             case isBot = "is_bot"
             case updated
             case isAppUser = "is_app_user"
-            case has2Fa = "has_2fa"
+            case whoCanShareContactCard = "who_can_share_contact_card"
         }
     }
 

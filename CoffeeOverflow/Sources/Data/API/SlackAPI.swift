@@ -10,7 +10,7 @@ enum SlackAPI {
 
 extension SlackAPI: TargetType {
     var baseURL: URL {
-        return URL(string: "https://api.slack.com/methods")!
+        return URL(string: "https://slack.com/api")!
         
     }
     
@@ -38,7 +38,7 @@ extension SlackAPI: TargetType {
         switch self {
         case .lookupUserByEmail(let email):
             return .requestParameters(
-                parameters: ["eamil": email],
+                parameters: ["email": email],
                 encoding: URLEncoding.queryString
             )
         case .postChatMessgae(let channel, let threadTS, let text):
@@ -62,8 +62,12 @@ extension SlackAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        guard let slackBotToken = EnvironmentManager.slackBotToken else { return nil }
-        return ["Authorization": "Bearer \(slackBotToken)"]
+        guard let slackBotToken = EnvironmentManager.slackBotToken else {
+            return nil
+        }
+        return [
+            "Authorization": "Bearer \(slackBotToken)"
+        ]
     }
 
 }
