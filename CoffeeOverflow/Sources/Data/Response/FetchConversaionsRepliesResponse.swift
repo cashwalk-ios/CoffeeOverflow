@@ -104,3 +104,12 @@ extension FetchConversaionsRepliesResponse {
         }
     }
 }
+
+// MARK: - To Domain
+extension FetchConversaionsRepliesResponse {
+    func asAnswerArray() -> [Answer] {
+        return self.messages.map {
+            return Answer(answererSlackId: $0.user, text: $0.text)
+        }
+    }
+}

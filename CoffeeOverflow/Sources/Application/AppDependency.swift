@@ -23,7 +23,13 @@ extension AppDependency {
         let userRepository: UserReposiotry = UserRepositoryImpl(
             slackDataSource: slackDataSource,
             firestoreDataSource: firestoreDataSource,
-            userDefaultsDataSource: userDefaultsDataSource)
+            userDefaultsDataSource: userDefaultsDataSource
+        )
+        let questionsRepository: QuestionsRepository = QuestionsRepositoryImpl(
+            slackDataSource: slackDataSource,
+            firestoreDataSource: firestoreDataSource
+        )
+        let chatRepository: ChatRepository = ChatRepositoryImpl(slackDataSource: slackDataSource)
         
         let useCase: SignInUseCase = SignInUseCase(userRepository: userRepository)
         

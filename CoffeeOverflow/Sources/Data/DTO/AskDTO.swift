@@ -27,3 +27,17 @@ struct AskDTO: Codable {
         case userId = "user_id"
     }
 }
+
+// MARK: - To Domain
+extension AskDTO {
+    func asQuestion() -> Question {
+        return Question(
+            acceptedAnswerer: self.acceptedAnswerer,
+            channelId: self.channelId,
+            isAccepted: self.isAccepted,
+            text: self.text,
+            timestamp: self.ts,
+            userId: self.userId
+        )
+    }
+}

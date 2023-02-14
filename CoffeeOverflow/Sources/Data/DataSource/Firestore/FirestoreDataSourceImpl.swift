@@ -24,9 +24,8 @@ class FirestoreDataSourceImpl: FirestoreDataSource {
         try db.collection(Collection.asks.rawValue).document(id).setData(from: ask, encoder: Firestore.Encoder())
     }
     
-    func deleteAsk(ask: AskDTO) async throws {
-        guard let id = ask.id else { return }
-        try await db.collection(Collection.asks.rawValue).document(id).delete()
+    func deleteAsk(askId: String) async throws {
+        try await db.collection(Collection.asks.rawValue).document(askId).delete()
     }
     
     func insertUser(user: UserDTO) throws {
