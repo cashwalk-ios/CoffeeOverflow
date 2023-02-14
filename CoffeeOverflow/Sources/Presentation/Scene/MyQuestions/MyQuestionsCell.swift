@@ -28,6 +28,7 @@ class MyQuestionsCell: UITableViewCell {
     fileprivate let iconImageView = UIImageView()
     var deleteButton = UIButton()
     var choiceButton = UIButton()
+    fileprivate var participantsView = ParticipantsView()
     
     var state: CellState = .collapsed {
         didSet {
@@ -45,6 +46,19 @@ class MyQuestionsCell: UITableViewCell {
         contentView.backgroundColor = .black
         selectionStyle = .none
         separatorInset = .zero
+        
+        participantsView.collectionView.delegate = self
+        participantsView.collectionView.dataSource = self
+        
+        participantsView.configure(profile: [
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
+            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!)
+        ])
         
         iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
@@ -76,7 +90,7 @@ class MyQuestionsCell: UITableViewCell {
         questionLabel.lineBreakMode = .byTruncatingTail
         questionLabel.numberOfLines = 2
         
-        let participantsCount = 5
+        let participantsCount = 7
         
         participantsCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
         participantsCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
@@ -117,16 +131,18 @@ class MyQuestionsCell: UITableViewCell {
                 flex.addItem().height(10)
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem().height(10)
-                    flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        for _ in 1...participantsCount {
-                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
-                            let participantsButton = UIButton()
-                            participantsButton.backgroundColor = .black
-                            participantsButton.setBackgroundImage(iconImage, for: .normal)
-                            participantsButton.layer.cornerRadius = 10
-                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
-                        }
-                    }
+//                    flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
+//                        for buttonTag in 1...participantsCount {
+//                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
+//                            let participantsButton = UIButton()
+//                            participantsButton.backgroundColor = .black
+//                            participantsButton.setBackgroundImage(iconImage, for: .normal)
+//                            participantsButton.layer.cornerRadius = 10
+//                            participantsButton.tag = buttonTag
+//                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
+//                        }
+                    flex.addItem(participantsView).width(100%).height(50)
+//                    }
                     flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                         flex.addItem(deleteButton).size(50)
