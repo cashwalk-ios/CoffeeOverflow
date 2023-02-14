@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class MyQuestionsDataSource: NSObject, UITableViewDataSource {
     
     fileprivate var indexPaths: Set<IndexPath> = []
     var methods: [Method] = []
+    private let disposeBag = DisposeBag()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return methods.count
@@ -21,6 +24,18 @@ final class MyQuestionsDataSource: NSObject, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyQuestionsCell.reuseIdentifier, for: indexPath) as! MyQuestionsCell
         cell.configure(method: methods[indexPath.row])
         cell.state = cellIsExpanded(at: indexPath) ? .expanded : .collapsed
+        
+        cell.deleteButton.rx.tap
+            .bind { [weak self] (_) in
+//                guard let self = self else {return}
+                print("삭제버튼 누름")
+            }.disposed(by: disposeBag)
+        
+        cell.choiceButton.rx.tap
+            .bind { (_) in
+                print("채택버튼 누름")
+            }.disposed(by: disposeBag)
+        
         return cell
     }
     
