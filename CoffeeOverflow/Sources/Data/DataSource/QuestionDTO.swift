@@ -1,5 +1,5 @@
 //
-//  QuestionDTO.swift
+//  AskDTO.swift
 //  CoffeeOverflow
 //
 //  Created by Nudge on 2023/02/13.
@@ -9,7 +9,7 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct QuestionDTO: Codable {
+struct AskDTO: Codable {
     @DocumentID var id: String?
     let acceptedAnswerer: String?
     let channelId: String

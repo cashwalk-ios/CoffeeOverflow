@@ -11,7 +11,7 @@ import RxSwift
 
 protocol FirestoreDataSource {
     func insertUser(user: UserDTO) async throws
-    func selectAnswerer(question: QuestionDTO) async throws // 질문자 채택 -> 질문 업데이트
-    func deleteAsk(question: QuestionDTO) async throws
-    func fetchAsks() async throws -> [QuestionDTO]
+    func putAnswerer(ask: AskDTO) async throws
+    func deleteAsk(ask: AskDTO) async throws
+    func fetchAsks() async throws -> [AskDTO]
 }
