@@ -2,7 +2,7 @@ import Foundation
 
 import RxSwift
 
-class FetchMyQuestionsUseCase {
+class DeleteQuestionUseCase {
 
     private let questionsRepository: QuestionsRepository
     
