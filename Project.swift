@@ -26,7 +26,8 @@ let target = Target(
         .firebaseStore,
         .moya,
         .rxMoya,
-        .googleSingIn
+        .googleSingIn,
+        .rxGesture
     ],
     settings: .settings(base: [
         "GCC_PREPROCESSOR_DEFINITIONS" : "FLEXLAYOUT_SWIFT_PACKAGE=1"
@@ -44,7 +45,8 @@ let project = Project(
             .rxSwift,
             .firebase,
             .moya,
-            .googleSingIn
+            .googleSingIn,
+            .rxGesture
         ],
     settings: .settings(configurations: [
         .debug(name: "Debug", xcconfig: .relativeToRoot("Configuration/env.xcconfig")),

@@ -21,6 +21,7 @@ public extension TargetDependency {
     static let moya: TargetDependency = .package(product: "Moya")
     static let rxMoya: TargetDependency = .package(product: "RxMoya")
     static let googleSingIn: TargetDependency = .package(product: "GoogleSignIn")
+    static let rxGesture: TargetDependency = .package(product: "RxGesture")
 }
 
 public extension Package {
@@ -49,6 +50,8 @@ public extension Package {
         requirement: .upToNextMajor(from: "15.0.0")
     )
     static let googleSingIn: Package = .remote(url: "https://github.com/google/GoogleSignIn-iOS", requirement: .upToNextMajor(from: "7.0.0"))
+    
+    static let rxGesture: Package = .remote(url: "https://github.com/RxSwiftCommunity/RxGesture", requirement: .upToNextMajor(from: "4.0.0"))
 }
 
 
