@@ -23,6 +23,8 @@ let target = Target(name: "CoffeeOverflow",
                                    .firebaseAuth,
                                    .firebaseMessaging,
                                    .firebaseStorage,
+                                   .moya,
+                                   .rxMoya
                     ],
                     settings: .settings(base: ["GCC_PREPROCESSOR_DEFINITIONS" : "FLEXLAYOUT_SWIFT_PACKAGE=1"])
                 )
@@ -35,7 +37,12 @@ let project = Project(name: "CoffeeOverflow",
                          .pinLayout,
                          .reactorKit,
                          .rxSwift,
-                         .firebase],
+                         .firebase,
+                         .moya],
+                      settings: .settings(configurations: [
+                        .debug(name: "Debug", xcconfig: .relativeToRoot("Configuration/env.xcconfig")),
+                        .release(name: "Release", xcconfig: .relativeToRoot("Configuration/env.xcconfig"))
+                      ]),
                         targets: [target])
 
 
