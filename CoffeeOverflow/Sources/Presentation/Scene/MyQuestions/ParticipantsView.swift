@@ -15,7 +15,7 @@ class ParticipantsView: UIView {
     fileprivate let rootFlexContainer = UIView()
 
     private(set) var collectionView: UICollectionView
-    fileprivate let cellTemplate = ProfileCell()
+    fileprivate let cellTemplate = ParticipantsCell()
 
     fileprivate var profile: [Profile] = []
     
@@ -23,7 +23,7 @@ class ParticipantsView: UIView {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         super.init(frame: .zero)
 
-        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.reuseIdentifier)
+        collectionView.register(ParticipantsCell.self, forCellWithReuseIdentifier: ParticipantsCell.reuseIdentifier)
         collectionView.backgroundColor = .clear
         
         let layout = UICollectionViewFlowLayout()

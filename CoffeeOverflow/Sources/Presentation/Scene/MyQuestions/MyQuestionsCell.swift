@@ -156,9 +156,9 @@ class MyQuestionsCell: UITableViewCell {
 //                    }
                     flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
-                        flex.addItem(deleteButton).size(50)
+                        flex.addItem(deleteButton).size(40)
                         flex.addItem().width(10)
-                        flex.addItem(choiceButton).height(50).grow(1)
+                        flex.addItem(choiceButton).height(40).grow(1)
                     }
                 }
                 
@@ -219,7 +219,7 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.reuseIdentifier, for: indexPath) as! ProfileCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ParticipantsCell.reuseIdentifier, for: indexPath) as! ParticipantsCell
         let image = UIImage(systemName: "person") ?? UIImage() // tempImage
         cell.configure(data: image)
         return cell
@@ -231,5 +231,31 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
+        
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ParticipantsCell.reuseIdentifier, for: indexPath) as! ParticipantsCell
+        
+        if cell.state == .unselected {
+            print("11111")
+            cell.state = .selectd
+//            dataSource.addExpandedIndexPath(indexPath)
+
+//            DispatchQueue.main.async {
+//                collectionView.beginUpdates()
+//                collectionView.endUpdates()
+//            }
+        } else {
+            print("22222")
+            cell.state = .unselected
+//            dataSource.removeExpandedIndexPath(indexPath)
+            
+//            DispatchQueue.main.async {
+//                collectionView.beginUpdates()
+//                collectionView.endUpdates()
+//            }
+        }
+        
+        collectionView.reloadData()
+         
     }
 }
