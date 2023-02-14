@@ -36,15 +36,7 @@ class MainViewController: UIViewController, View {
     
     override func loadView() {
         view = MainView()
-        mainView.configure(profile: [
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!)
-        ])
+        mainView.configure(profile: [])
     }
     
     func bind(reactor: MainReactor) {

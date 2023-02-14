@@ -25,11 +25,6 @@ class LoginReactor: Reactor {
     }
     
     let initialState: State = State()
-    private var useCase: MockUseCase
-
-    init(useCase: MockUseCase) {
-        self.useCase = useCase
-    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         
