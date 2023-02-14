@@ -14,4 +14,5 @@ protocol FirestoreDataSource {
     func putAsk(ask: AskDTO) throws
     func deleteAsk(askId: String) async throws
     func fetchAsks() async throws -> [AskDTO]
+    func fetchUsers() async throws -> [UserDTO]
 }

@@ -38,6 +38,14 @@ class FirestoreDataSourceImpl: FirestoreDataSource {
             try? document.data(as: AskDTO.self)
         }
     }
+    
+    func fetchUsers() async throws -> [UserDTO] {
+        let snapshot = try await db.collection(Collection.users.rawValue).getDocuments()
+        return snapshot.documents.compactMap { document in
+            try? document.data(as: UserDTO.self)
+        }
+    }
+    
 }
 
 
