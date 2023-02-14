@@ -26,27 +26,27 @@ public extension Package {
     static let flexLayout: Package = .remote(
         url: "https://github.com/layoutBox/FlexLayout.git",
         requirement: .upToNextMajor(from: "1.3.25")
-      )
+    )
     static let pinLayout: Package = .remote(
         url: "https://github.com/layoutBox/PinLayout.git",
         requirement: .upToNextMajor(from: "1.10.0")
-      )
+    )
     static let reactorKit: Package = .remote(
         url: "https://github.com/ReactorKit/ReactorKit",
         requirement: .upToNextMajor(from: "3.2.0")
-      )
+    )
     static let rxSwift: Package = .remote(
         url: "https://github.com/ReactiveX/RxSwift.git",
         requirement: .upToNextMajor(from: "6.5.0")
-      )
+    )
     static let firebase: Package = .remote(
         url: "https://github.com/firebase/firebase-ios-sdk.git",
         requirement: .upToNextMajor(from: "8.0.0")
-      )
+    )
     static let moya: Package = .remote(
         url: "https://github.com/Moya/Moya.git",
         requirement: .upToNextMajor(from: "15.0.0")
-      )
+    )
 }
 
 
