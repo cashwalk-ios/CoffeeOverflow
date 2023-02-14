@@ -19,18 +19,18 @@ class FirestoreDataSourceImpl: FirestoreDataSource {
 
     private let db = Firestore.firestore()
     
-    func putAnswerer(ask: AskDTO) async throws {
+    func putAsk(ask: AskDTO) throws {
         guard let id = ask.id else { return }
-        try await db.collection(Collection.asks.rawValue).document(id).setData(from: ask, encoder: Firestore.Encoder())
+        try db.collection(Collection.asks.rawValue).document(id).setData(from: ask, encoder: Firestore.Encoder())
     }
     
-    func deleteAsk(ask: AskDTO) async throws{
+    func deleteAsk(ask: AskDTO) async throws {
         guard let id = ask.id else { return }
         try await db.collection(Collection.asks.rawValue).document(id).delete()
     }
     
-    func insertUser(user: UserDTO) async throws{
-            try await db.collection(Collection.users.rawValue).addDocument(from: user, encoder: Firestore.Encoder())
+    func insertUser(user: UserDTO) throws {
+        _ = try db.collection(Collection.users.rawValue).addDocument(from: user, encoder: Firestore.Encoder())
     }
     
     func fetchAsks() async throws -> [AskDTO] {

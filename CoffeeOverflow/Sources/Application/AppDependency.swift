@@ -16,16 +16,25 @@ struct AppDependency {
 extension AppDependency {
     static func resolve() -> AppDependency {
     
-        let mockUsecase = MockUseCase()
-        let mockReactor = MockReactor(useCase: mockUsecase)
-        let mockViewControllor = MockViewController(reactor: mockReactor)
+        let userDefaultsDataSource: UserDefaultsDataSource = UserDefaultsDataSourceImpl()
+        let slackDataSource: SlackDataSource = SlackDataSourceImpl()
+        let firestoreDataSource: FirestoreDataSource = FirestoreDataSourceImpl()
+
+        let userRepository: UserReposiotry = UserRepositoryImpl(
+            slackDataSource: slackDataSource,
+            firestoreDataSource: firestoreDataSource,
+            userDefaultsDataSource: userDefaultsDataSource)
         
-        let mainReactor = MainReactor(useCase: mockUsecase)
+        let useCase: SignInUseCase = SignInUseCase(userRepository: userRepository)
+        
+        let mainReactor = MainReactor()
+        let loginReactor = LoginReactor()
+
         let mainViewController = MainViewController(reactor: mainReactor)
-        
-        let loginReactor = LoginReactor(useCase: mockUsecase)
-        let loginViewController = LoginViewController(reactor: loginReactor,
-                                                      view: mainViewController)
+        let loginViewController = LoginViewController(
+            reactor: loginReactor,
+            view: mainViewController
+        )
         
         return AppDependency(viewController: loginViewController)
     }

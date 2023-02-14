@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 protocol FirestoreDataSource {
-    func insertUser(user: UserDTO) async throws
-    func putAnswerer(ask: AskDTO) async throws
+    func insertUser(user: UserDTO) throws
+    func putAsk(ask: AskDTO) throws
     func deleteAsk(ask: AskDTO) async throws
     func fetchAsks() async throws -> [AskDTO]
 }

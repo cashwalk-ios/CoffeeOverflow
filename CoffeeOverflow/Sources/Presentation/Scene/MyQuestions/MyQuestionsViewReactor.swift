@@ -25,11 +25,6 @@ class MyQuestionsViewReactor: Reactor {
     }
     
     let initialState: State = State()
-    private var useCase: MyQuestionsUseCase
-
-    init(useCase: MyQuestionsUseCase) {
-        self.useCase = useCase
-    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         

@@ -17,7 +17,7 @@ class MainView: UIView {
     private(set) var collectionView: UICollectionView
     fileprivate let cellTemplate = ProfileCell()
     
-    fileprivate var profile: [Profile] = []
+    fileprivate var profile: [User] = []
     
     private(set) var cupsLabel: UILabel = {
         let label = UILabel()
@@ -85,7 +85,7 @@ class MainView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(profile: [Profile]) {
+    func configure(profile: [User]) {
         self.profile = profile
         collectionView.reloadData()
     }

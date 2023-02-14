@@ -2,11 +2,11 @@ import Foundation
 
 struct LookupUserByEmailResponse: Decodable {
     let ok: Bool
-    let user: User
+    let user: SlackUser
 }
 
 extension LookupUserByEmailResponse {
-    struct User: Decodable {
+    struct SlackUser: Decodable {
         let id, teamID, name: String
         let deleted: Bool
         let color, realName, tz, tzLabel: String
@@ -63,5 +63,16 @@ extension LookupUserByEmailResponse {
             case image512 = "image_512"
             case team
         }
+    }
+}
+
+// MARK: - To Domain
+extension LookupUserByEmailResponse {
+    func asUser() -> User {
+        return User(
+            slackId: self.user.id,
+            email: self.user.profile.email,
+            profileImage: URL(string: self.user.profile.image48)
+        )
     }
 }
