@@ -14,7 +14,7 @@ class FetchMyQuestionsUseCase {
 
     func excute() -> Single<[Question]> {
         self.questionsRepository.fetchQuestions()
-            .map { $0.filter(self.checkIsMyActivatingQuestion(question:)) }
+            .map { self.filterMyActivatingQuestions($0) }
             .flatMap { Single.zip($0.map { self.zipWithAnswerers(question: $0) }) }
     }
 
@@ -22,25 +22,34 @@ class FetchMyQuestionsUseCase {
 
 extension FetchMyQuestionsUseCase {
 
-    private func checkIsMyActivatingQuestion(question: Question) -> Bool {
-        guard let mySlackId = self.userReposiotry.fetchSlackId() else { return false }
-        return question.acceptedAnswerer == nil && question.userId == mySlackId
+    private func filterMyActivatingQuestions(_ questions: [Question]) -> [Question] {
+        let mySlackId = self.userReposiotry.fetchMySlackId()
+        return questions.filter {
+            $0.acceptedAnswerer == nil && $0.userId == mySlackId
+        }
     }
 
     private func zipWithAnswerers(question: Question) -> Single<Question> {
-        self.questionsRepository.fetchAnswerOfQuestion(channel: question.channelId, timestamp: question.timestamp)
-            .flatMap { Single.zip($0.map { self.convertAnswerToUser(answer: $0) }) }
-            .map {
-                var newQuestion = question
-                newQuestion.answerer = $0.compactMap { $0 }
-                return newQuestion
-            }
+        return self.questionsRepository.fetchAnswerOfQuestion(
+            channel: question.channelId,
+            timestamp: question.timestamp
+        )
+        .flatMap { self.convertAnswersToUsers(answers: $0) }
+        .map {
+            var newQuestion = question
+            newQuestion.answerer = $0
+            return newQuestion
+        }
     }
     
-    private func convertAnswerToUser(answer: Answer) -> Single<User?> {
-        self.userReposiotry.fetchUsers()
-            .map { $0.filter { $0.slackId == answer.answererSlackId }.first }
-            
+    private func convertAnswersToUsers(answers: [Answer]) -> Single<[User]> {
+        return self.userReposiotry.fetchUsers()
+            .map { users in
+                answers.map { answer in
+                    users.first { $0.slackId == answer.answererSlackId }
+                }
+                .compactMap { $0 }
+            }
     }
 
 }

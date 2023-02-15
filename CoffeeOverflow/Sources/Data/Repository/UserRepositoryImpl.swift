@@ -33,11 +33,11 @@ class UserRepositoryImpl: UserReposiotry {
             .map { $0.asUser() }
     }
 
-    func saveSlackId(_ slackId: String) {
+    func saveMySlackId(_ slackId: String) {
         self.userDefaultsDataSource.saveSlackId(slackId)
     }
 
-    func fetchSlackId() -> String? {
+    func fetchMySlackId() -> String? {
         return self.userDefaultsDataSource.fetchSlackId()
     }
 
