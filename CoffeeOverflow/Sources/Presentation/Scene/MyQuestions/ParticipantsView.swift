@@ -15,15 +15,15 @@ class ParticipantsView: UIView {
     fileprivate let rootFlexContainer = UIView()
 
     private(set) var collectionView: UICollectionView
-    fileprivate let cellTemplate = ParticipantsCell()
+    fileprivate let cellTemplate = ProfileCell()
 
-    fileprivate var profile: [User] = []
+    fileprivate var profile: [Profile] = []
     
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         super.init(frame: .zero)
 
-        collectionView.register(ParticipantsCell.self, forCellWithReuseIdentifier: ParticipantsCell.reuseIdentifier)
+        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.reuseIdentifier)
         collectionView.backgroundColor = .clear
         
         let layout = UICollectionViewFlowLayout()
@@ -40,7 +40,7 @@ class ParticipantsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(profile: [User]) {
+    func configure(profile: [Profile]) {
         self.profile = profile
         collectionView.reloadData()
     }

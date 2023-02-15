@@ -51,30 +51,6 @@ class MyQuestionsCell: UITableViewCell {
         participantsView.collectionView.dataSource = self
         
         participantsView.configure(profile: [
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!)
-        ])
-        
-        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
-        
-        participantsView.configure(profile: [
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!)
-        ])
-        
-        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
-        
-        participantsView.configure(profile: [
             Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
             Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
             Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
@@ -219,7 +195,7 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ParticipantsCell.reuseIdentifier, for: indexPath) as! ParticipantsCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.reuseIdentifier, for: indexPath) as! ProfileCell
         let image = UIImage(systemName: "person") ?? UIImage() // tempImage
         cell.configure(data: image)
         return cell
@@ -231,31 +207,5 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
-        
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ParticipantsCell.reuseIdentifier, for: indexPath) as! ParticipantsCell
-        
-        if cell.state == .unselected {
-            print("11111")
-            cell.state = .selectd
-//            dataSource.addExpandedIndexPath(indexPath)
-
-//            DispatchQueue.main.async {
-//                collectionView.beginUpdates()
-//                collectionView.endUpdates()
-//            }
-        } else {
-            print("22222")
-            cell.state = .unselected
-//            dataSource.removeExpandedIndexPath(indexPath)
-            
-//            DispatchQueue.main.async {
-//                collectionView.beginUpdates()
-//                collectionView.endUpdates()
-//            }
-        }
-        
-        collectionView.reloadData()
-         
     }
 }
