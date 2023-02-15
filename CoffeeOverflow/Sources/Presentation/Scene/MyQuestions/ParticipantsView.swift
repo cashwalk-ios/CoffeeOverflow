@@ -17,7 +17,7 @@ class ParticipantsView: UIView {
     private(set) var collectionView: UICollectionView
     fileprivate let cellTemplate = ProfileCell()
 
-    fileprivate var profile: [Profile] = []
+    fileprivate var profile: [User] = []
     
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -40,7 +40,7 @@ class ParticipantsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(profile: [Profile]) {
+    func configure(profile: [User]) {
         self.profile = profile
         collectionView.reloadData()
     }

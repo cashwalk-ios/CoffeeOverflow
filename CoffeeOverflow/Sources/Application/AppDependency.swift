@@ -56,6 +56,7 @@ extension AppDependency {
         // MARK: - Reactor
         let mainReactor = MainReactor()
         let loginReactor = LoginReactor()
+        let myQuestionsViewReactor = MyQuestionsViewReactor()
 
         // MARK: - ViewController
         let mainViewController = MainViewController(reactor: mainReactor)
@@ -63,7 +64,10 @@ extension AppDependency {
             reactor: loginReactor,
             view: mainViewController
         )
+        let myQuestionsViewController = MyQuestionsViewController(
+            reactor: myQuestionsViewReactor
+        )
 
-        return AppDependency(viewController: loginViewController)
+        return AppDependency(viewController: myQuestionsViewController)
     }
 }
