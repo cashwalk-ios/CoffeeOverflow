@@ -14,7 +14,7 @@ class SignInUseCase {
         return self.userRepository.lookupSlackUserByEmail(email: email)
             .map {
                 try self.userRepository.insertUser($0)
-                self.userRepository.saveSlackId($0.slackId)
+                self.userRepository.saveMySlackId($0.slackId)
             }
             .asCompletable()
     }

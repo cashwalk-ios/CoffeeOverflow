@@ -16,10 +16,12 @@ struct AppDependency {
 extension AppDependency {
     static func resolve() -> AppDependency {
     
+        // MARK: - DataSource
         let userDefaultsDataSource: UserDefaultsDataSource = UserDefaultsDataSourceImpl()
         let slackDataSource: SlackDataSource = SlackDataSourceImpl()
         let firestoreDataSource: FirestoreDataSource = FirestoreDataSourceImpl()
 
+        // MARK: - Repository
         let userRepository: UserReposiotry = UserRepositoryImpl(
             slackDataSource: slackDataSource,
             firestoreDataSource: firestoreDataSource,
@@ -31,11 +33,31 @@ extension AppDependency {
         )
         let chatRepository: ChatRepository = ChatRepositoryImpl(slackDataSource: slackDataSource)
         
-        let useCase: SignInUseCase = SignInUseCase(userRepository: userRepository)
+        // MARK: - UseCase
+        let checkIsSignedInUseCase = CheckIsSignedInUseCase(userRepository: userRepository)
+        let ConfirmResponsedCoffeeUseCase = ConfirmResponsedCoffeeUseCase(questionsRepository: questionsRepository)
+        let deleteQuestionUseCase = DeleteQuestionUseCase(questionsRepository: questionsRepository)
+        let requestCoffeeUseCase = RequestCoffeeUseCase(chatRepository: chatRepository)
+        let signInUseCase = SignInUseCase(userRepository: userRepository)
+        let selectionAnswerUseCase = SelectionAnswerUseCase(
+            userReposiotry: userRepository,
+            chatRepository: chatRepository,
+            questionsRepository: questionsRepository
+        )
+        let fetchMyQuestionsUseCase = FetchMyQuestionsUseCase(
+            userReposiotry: userRepository,
+            questionsRepository: questionsRepository
+        )
+        let fetchMyCoffeePurchaserUseCase = FetchMyCoffeePurchaserUseCase(
+            questionsRepository: questionsRepository,
+            userReposiotry: userRepository
+        )
         
+        // MARK: - Reactor
         let mainReactor = MainReactor()
         let loginReactor = LoginReactor()
 
+        // MARK: - ViewController
         let mainViewController = MainViewController(reactor: mainReactor)
         let loginViewController = LoginViewController(
             reactor: loginReactor,

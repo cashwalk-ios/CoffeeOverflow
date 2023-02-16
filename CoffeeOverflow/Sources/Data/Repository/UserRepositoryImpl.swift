@@ -33,12 +33,26 @@ class UserRepositoryImpl: UserReposiotry {
             .map { $0.asUser() }
     }
 
-    func saveSlackId(_ slackId: String) {
+    func saveMySlackId(_ slackId: String) {
         self.userDefaultsDataSource.saveSlackId(slackId)
     }
 
-    func fetchSlackId() -> String? {
+    func fetchMySlackId() -> String? {
         return self.userDefaultsDataSource.fetchSlackId()
+    }
+
+    func fetchUsers() -> Single<[User]> {
+        return Single.create { single in
+
+            Task { do {
+                let users = try await self.firestoreDataSource.fetchUsers()
+                single(.success(users.map { $0.asUser() }))
+            } catch {
+                single(.failure(error))
+            }}
+
+            return Disposables.create()
+        }
     }
 
 }
