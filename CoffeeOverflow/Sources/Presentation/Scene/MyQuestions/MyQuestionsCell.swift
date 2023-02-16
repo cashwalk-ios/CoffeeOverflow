@@ -24,7 +24,6 @@ class MyQuestionsCell: UITableViewCell {
     fileprivate let detailView = UIView()
     fileprivate let questionLabel = UILabel()
     fileprivate let participantsCountLabel = UILabel()
-    fileprivate let descriptionLabel = UILabel()
     fileprivate let iconImageView = UIImageView()
     var deleteButton = UIButton()
     var choiceButton = UIButton()
@@ -95,10 +94,6 @@ class MyQuestionsCell: UITableViewCell {
         attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
         participantsCountLabel.attributedText = attributedStr
         
-        descriptionLabel.font = UIFont.systemFont(ofSize: 12)
-        descriptionLabel.textColor = .white
-        descriptionLabel.numberOfLines = 0
-        
         deleteButton.backgroundColor = .black
         deleteButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
         deleteButton.layer.cornerRadius = 10
@@ -146,12 +141,10 @@ class MyQuestionsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(method: Method) {
-        questionLabel.text = method.name
+    func configure(question: Question) {
+        questionLabel.text = question.text
+        print("질문: \(question.text)")
         questionLabel.flex.markDirty()
-        
-        descriptionLabel.text = method.description
-        descriptionLabel.flex.markDirty()
         
     }
     

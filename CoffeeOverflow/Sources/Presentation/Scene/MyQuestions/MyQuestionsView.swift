@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import PinLayout
+import RxSwift
 
 class MyQuestionsView: UIView {
 
@@ -36,9 +37,10 @@ class MyQuestionsView: UIView {
         super.init(coder: aDecoder)
     }
     
-    func configure(methods: [Method]) {
-        dataSource.methods = methods
-        tableView.reloadData()
+    func configure(question: [Question]) {
+        print("질문??: \(question)")
+        dataSource.question = question
+//        tableView.reloadData()
     }
     
     override func layoutSubviews() {
