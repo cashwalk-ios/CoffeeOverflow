@@ -25,9 +25,11 @@ class MyQuestionsCell: UITableViewCell {
     fileprivate let questionLabel = UILabel()
     fileprivate let participantsCountLabel = UILabel()
     fileprivate let iconImageView = UIImageView()
-    var deleteButton = UIButton()
-    var choiceButton = UIButton()
+    var deleteQuestionButton = UIButton()
+    var selectionAnswerButton = UIButton()
     fileprivate var participantsView = ParticipantsView()
+    
+    var selectedIndexPathRow: Int?
     
     var state: CellState = .collapsed {
         didSet {
@@ -84,7 +86,7 @@ class MyQuestionsCell: UITableViewCell {
         participantsCountLabel.lineBreakMode = .byTruncatingTail
         participantsCountLabel.text = "0명참여중"
         
-        participantsCountLabel.text = "\(participantsCount)명참여중"
+        
         var textString = ""
         if let temp = participantsCountLabel.text {
             textString = temp
@@ -94,13 +96,13 @@ class MyQuestionsCell: UITableViewCell {
         attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
         participantsCountLabel.attributedText = attributedStr
         
-        deleteButton.backgroundColor = .black
-        deleteButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
-        deleteButton.layer.cornerRadius = 10
+        deleteQuestionButton.backgroundColor = .black
+        deleteQuestionButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
+        deleteQuestionButton.layer.cornerRadius = 10
         
-        choiceButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
-        choiceButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
-        choiceButton.layer.cornerRadius = 10
+        selectionAnswerButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
+        selectionAnswerButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
+        selectionAnswerButton.layer.cornerRadius = 10
 
         rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
             flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
@@ -127,9 +129,9 @@ class MyQuestionsCell: UITableViewCell {
 //                    }
                     flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
-                        flex.addItem(deleteButton).size(40)
+                        flex.addItem(deleteQuestionButton).size(40)
                         flex.addItem().width(10)
-                        flex.addItem(choiceButton).height(40).grow(1)
+                        flex.addItem(selectionAnswerButton).height(40).grow(1)
                     }
                 }
                 
@@ -144,6 +146,16 @@ class MyQuestionsCell: UITableViewCell {
     func configure(question: Question) {
         questionLabel.text = question.text
         print("질문: \(question.text)")
+        let answererCount = question.answerer?.count
+        participantsCountLabel.text = "\(answererCount)명참여중"
+        
+        questionLabel.flex.markDirty()
+        participantsCountLabel.flex.markDirty()
+    }
+    
+    func configure(methods: Method) {
+        questionLabel.text = methods.name
+        print("질문: \(methods.name)")
         questionLabel.flex.markDirty()
         
     }
@@ -190,7 +202,7 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.reuseIdentifier, for: indexPath) as! ProfileCell
         let image = UIImage(systemName: "person") ?? UIImage() // tempImage
-        cell.configure(data: image)
+        cell.configure(data: image) // 여기 User 정보 넘겨야 함 
         return cell
     }
 
@@ -200,5 +212,6 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
+        selectedIndexPathRow = indexPath.row
     }
 }

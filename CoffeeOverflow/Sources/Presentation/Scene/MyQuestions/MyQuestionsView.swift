@@ -10,21 +10,27 @@ import Foundation
 import UIKit
 import PinLayout
 import RxSwift
+import RxCocoa
 
 class MyQuestionsView: UIView {
-
     fileprivate let tableView = UITableView(frame: .zero, style: .grouped)
     fileprivate let MyQuestionsCellTemplate = MyQuestionsCell()
     
     fileprivate var isExpanded = false
     fileprivate var isSelectIndexPath: IndexPath?
-    fileprivate var dataSource = MyQuestionsDataSource()
+    
+    fileprivate var indexPaths: Set<IndexPath> = []
+    fileprivate var question: [Question] = []
+    fileprivate var methods: [Method] = []
+    fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
+    fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
+    fileprivate let disposeBag = DisposeBag()
     
     init() {
         super.init(frame: .zero)
         self.backgroundColor = .black
 
-        tableView.dataSource = dataSource
+        tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 10
         tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
@@ -37,10 +43,15 @@ class MyQuestionsView: UIView {
         super.init(coder: aDecoder)
     }
     
-    func configure(question: [Question]) {
+    func configure(question: [Question], selectionAnswerUseCase: SelectionAnswerUseCase, deleteQuestionUseCase: DeleteQuestionUseCase) {
         print("질문??: \(question)")
-        dataSource.question = question
-//        tableView.reloadData()
+        self.question = question
+        tableView.reloadData()
+    }
+    
+    func configure(methods: [Method]) {
+        self.methods = methods
+        tableView.reloadData()
     }
     
     override func layoutSubviews() {
@@ -50,14 +61,14 @@ class MyQuestionsView: UIView {
 }
 
 // MARK: UITableViewDelegate
-extension MyQuestionsView: UITableViewDelegate {
+extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! MyQuestionsCell
         
         if cell.state == .collapsed {
             cell.state = .expanded
-            dataSource.addExpandedIndexPath(indexPath)
+            self.addExpandedIndexPath(indexPath)
 
             DispatchQueue.main.async {
                 tableView.beginUpdates()
@@ -65,7 +76,7 @@ extension MyQuestionsView: UITableViewDelegate {
             }
         } else {
             cell.state = .collapsed
-            dataSource.removeExpandedIndexPath(indexPath)
+            self.removeExpandedIndexPath(indexPath)
             
             DispatchQueue.main.async {
                 tableView.beginUpdates()
@@ -82,5 +93,55 @@ extension MyQuestionsView: UITableViewDelegate {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyQuestionsHeader.reuseIdentifier) as! MyQuestionsHeader
         header.configure(title: "My Questions")
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return question.count
+//        return methods.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: MyQuestionsCell.reuseIdentifier, for: indexPath) as! MyQuestionsCell
+        let question = self.question[indexPath.row]
+        cell.configure(question: question)
+//        cell.configure(methods: methods[indexPath.row])
+        
+        cell.state = cellIsExpanded(at: indexPath) ? .expanded : .collapsed
+        
+        cell.deleteQuestionButton.rx.tap
+            .bind { [weak self] (_) in
+                guard let self = self else {return}
+                print("삭제버튼 누름")
+                self.deleteQuestionUseCase?.excute(question: question)
+            }.disposed(by: disposeBag)
+        
+        cell.selectionAnswerButton.rx.tap
+            .bind { [weak self] (_) in
+                guard let self = self else {return}
+                print("채택버튼 누름 \(cell.selectedIndexPathRow)")
+                guard let row = cell.selectedIndexPathRow, let answer = question.answerer?[row] else {return}
+                self.selectionAnswerUseCase?.excute(question: question, answer: answer)
+            }.disposed(by: disposeBag)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+}
+
+
+extension MyQuestionsView {
+    func cellIsExpanded(at indexPath: IndexPath) -> Bool {
+        return indexPaths.contains(indexPath)
+    }
+    
+    func addExpandedIndexPath(_ indexPath: IndexPath) {
+        indexPaths.insert(indexPath)
+    }
+    
+    func removeExpandedIndexPath(_ indexPath: IndexPath) {
+        indexPaths.remove(indexPath)
     }
 }

@@ -66,7 +66,9 @@ extension AppDependency {
         )
         let myQuestionsViewController = MyQuestionsViewController(
             reactor: myQuestionsViewReactor,
-            fetchMyQuestionsUseCase: fetchMyQuestionsUseCase
+            fetchMyQuestionsUseCase: fetchMyQuestionsUseCase,
+            selectionAnswerUseCase: selectionAnswerUseCase,
+            deleteQuestionUseCase: deleteQuestionUseCase
         )
 
         return AppDependency(viewController: myQuestionsViewController)
