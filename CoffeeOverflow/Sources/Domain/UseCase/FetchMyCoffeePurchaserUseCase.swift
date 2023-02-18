@@ -12,10 +12,9 @@ class FetchMyCoffeePurchaserUseCase {
         self.userReposiotry = userReposiotry
     }
 
-    func excute() -> Single<[User]> {
+    func excute() -> Single<[Question]> {
         self.questionsRepository.fetchQuestions()
             .map { self.filterMyAnsweredQuestion($0) }
-            .flatMap { self.convertQuestionsToUsers(questions: $0) }
     }
     
 }
