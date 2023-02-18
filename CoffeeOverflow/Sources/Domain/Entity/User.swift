@@ -1,6 +1,6 @@
 import Foundation
 
-struct User {
+struct User: Codable {
     let slackId: String
     let email: String
     let profileImage: URL?

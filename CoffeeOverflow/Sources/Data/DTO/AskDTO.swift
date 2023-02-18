@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 struct AskDTO: Codable {
     @DocumentID var id: String?
-    let acceptedAnswerer: String?
+    let acceptedAnswerer: User?
     let channelId: String
     let text: String
     let ts: String
