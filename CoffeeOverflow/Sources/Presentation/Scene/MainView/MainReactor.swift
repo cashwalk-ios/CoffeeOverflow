@@ -11,6 +11,10 @@ import ReactorKit
 
 class MainReactor: Reactor {
     
+    private let confirmResponsedCoffeeUseCase: ConfirmResponsedCoffeeUseCase
+    private let requestCoffeeUseCase: RequestCoffeeUseCase
+    private let fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase
+    
     enum Action {
         
     }
@@ -25,6 +29,15 @@ class MainReactor: Reactor {
     }
     
     let initialState: State = State()
+    
+    init(confirmResponsedCoffeeUseCase: ConfirmResponsedCoffeeUseCase,
+         requestCoffeeUseCase: RequestCoffeeUseCase,
+         fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase
+    ) {
+        self.confirmResponsedCoffeeUseCase = confirmResponsedCoffeeUseCase
+        self.requestCoffeeUseCase = requestCoffeeUseCase
+        self.fetchMyCoffeePurchaserUseCase = fetchMyCoffeePurchaserUseCase
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         
