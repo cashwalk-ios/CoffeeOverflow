@@ -55,7 +55,7 @@ extension AppDependency {
         
         // MARK: - Reactor
         let mainReactor = MainReactor()
-        let loginReactor = LoginReactor()
+        let loginReactor = LoginReactor(signInUsecase: signInUseCase, checkSingInUsecase: checkIsSignedInUseCase)
 
         // MARK: - ViewController
         let mainViewController = MainViewController(reactor: mainReactor)
