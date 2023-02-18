@@ -2,7 +2,7 @@ import Foundation
 
 struct Question {
     let id: String
-    var acceptedAnswerer: String?
+    var acceptedAnswerer: User?
     let channelId: String
     let text: String
     let timestamp: String

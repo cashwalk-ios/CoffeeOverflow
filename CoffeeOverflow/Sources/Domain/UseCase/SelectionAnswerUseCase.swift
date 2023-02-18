@@ -16,7 +16,7 @@ class SelectionAnswerUseCase {
 
     func excute(question: Question, answer: User) -> Completable {
         var answeredQuestion = question
-        answeredQuestion.acceptedAnswerer = answer.slackId
+        answeredQuestion.acceptedAnswerer = answer
         do {
             try self.questionsRepository.putQuestion(answeredQuestion)
             return self.chatRepository.postChatMessgae(

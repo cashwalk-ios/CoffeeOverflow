@@ -25,7 +25,7 @@ extension FetchMyCoffeePurchaserUseCase {
     private func filterMyAnsweredQuestion(_ questions: [Question]) -> [Question] {
         let mySlackId = self.userReposiotry.fetchMySlackId()
         return questions.filter {
-            $0.acceptedAnswerer == mySlackId
+            $0.acceptedAnswerer?.slackId == mySlackId
         }
     }
 
