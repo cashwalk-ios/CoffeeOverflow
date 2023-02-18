@@ -16,16 +16,20 @@ class MainReactor: Reactor {
     private let fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase
     
     enum Action {
-        
+        case fetch
+        case requestCoffee(question: Question)
+        case endRequestTimer
+        case confirmRecived(question: Question)
     }
     
     enum Mutation {
-        case setLoading(Bool)
+        case setMySelectedQuestions([Question])
+        case setRequestState(Bool)
     }
     
     struct State {
-        
-        var isLoading: Bool = false
+        var coffeePurchasers: [Question] = [Question]()
+        var isRequesting: Bool = false // 요청중 상태
     }
     
     let initialState: State = State()
@@ -40,7 +44,21 @@ class MainReactor: Reactor {
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
-        
+        switch action {
+        case .fetch:
+            return fetchMyCoffeePurchaserUseCase.excute()
+                .map { Mutation.setMySelectedQuestions($0) }
+                .asObservable()
+        case let .requestCoffee(question):
+            return requestCoffeeUseCase.excute(question: question)
+                .andThen(.just(.setRequestState(true)))
+        case .endRequestTimer:
+            return .just(.setRequestState(false))
+        case let .confirmRecived(question):
+            var newQuestions = currentState.coffeePurchasers.filter { $0.id != question.id } 
+            return confirmResponsedCoffeeUseCase.excute(question: question)
+                .andThen(.just(.setMySelectedQuestions(newQuestions)))
+        }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
@@ -48,8 +66,10 @@ class MainReactor: Reactor {
         
         switch mutation {
         
-        case let .setLoading(value):
-            newState.isLoading = value
+        case let .setMySelectedQuestions(question):
+            newState.coffeePurchasers = question
+        case let .setRequestState(state):
+            newState.isRequesting = state
         }
         
         return newState
