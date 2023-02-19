@@ -17,19 +17,22 @@ class MainReactor: Reactor {
     
     enum Action {
         case fetch
-        case requestCoffee(question: Question)
+        case requestCoffee
         case endRequestTimer
-        case confirmRecived(question: Question)
+        case confirmRecived
+        case select(index: Int)
     }
     
     enum Mutation {
         case setMySelectedQuestions([Question])
         case setRequestState(Bool)
+        case setSelectedQuestion(Question)
     }
     
     struct State {
         var coffeePurchasers: [Question] = [Question]()
         var isRequesting: Bool = false // 요청중 상태
+        var selectedQuestion: Question?
     }
     
     let initialState: State = State()
@@ -49,15 +52,20 @@ class MainReactor: Reactor {
             return fetchMyCoffeePurchaserUseCase.excute()
                 .map { Mutation.setMySelectedQuestions($0) }
                 .asObservable()
-        case let .requestCoffee(question):
+        case .requestCoffee:
+            guard let question = currentState.selectedQuestion else { return .empty()}
             return requestCoffeeUseCase.excute(question: question)
                 .andThen(.just(.setRequestState(true)))
         case .endRequestTimer:
             return .just(.setRequestState(false))
-        case let .confirmRecived(question):
-            var newQuestions = currentState.coffeePurchasers.filter { $0.id != question.id } 
+        case .confirmRecived:
+            guard let question = currentState.selectedQuestion else { return .empty()}
+            let newQuestions = currentState.coffeePurchasers.filter { $0.id != question.id }
             return confirmResponsedCoffeeUseCase.excute(question: question)
                 .andThen(.just(.setMySelectedQuestions(newQuestions)))
+        case let.select(index):
+            let selectedQuestion = currentState.coffeePurchasers[index]
+            return .just(.setSelectedQuestion(selectedQuestion))
         }
     }
     
@@ -66,10 +74,12 @@ class MainReactor: Reactor {
         
         switch mutation {
         
-        case let .setMySelectedQuestions(question):
+        case let .setMySelectedQuestions(question):  
             newState.coffeePurchasers = question
         case let .setRequestState(state):
             newState.isRequesting = state
+        case let .setSelectedQuestion(question):
+            newState.selectedQuestion = question
         }
         
         return newState

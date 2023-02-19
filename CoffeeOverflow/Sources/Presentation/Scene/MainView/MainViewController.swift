@@ -10,10 +10,13 @@ import UIKit
 import ReactorKit
 import FlexLayout
 import PinLayout
+import RxCocoa
+import RxSwift
 
 class MainViewController: UIViewController, View {
 
     var disposeBag = DisposeBag()
+    private var timer: Timer?
     
     fileprivate var mainView: MainView {
         return self.view as! MainView
@@ -21,13 +24,13 @@ class MainViewController: UIViewController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainView.collectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     init(reactor: MainReactor) {
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
-        mainView.collectionView.delegate = self
-        mainView.collectionView.dataSource = self
     }
     
     required init?(coder: NSCoder) {
@@ -36,28 +39,78 @@ class MainViewController: UIViewController, View {
     
     override func loadView() {
         view = MainView()
-        mainView.configure(profile: [])
+        view.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
+        reactor?.action.onNext(.fetch)
     }
     
     func bind(reactor: MainReactor) {
-        return
+        
+        // MARK: Action
+        mainView.collectionView.rx.itemSelected
+            .withUnretained(self)
+             .subscribe(onNext: { vc, indexPath in
+                 reactor.action.onNext(.select(index: indexPath.row))
+            }).disposed(by: disposeBag)
+        
+        mainView.collectionView.rx.itemSelected
+            .take(1)
+            .withUnretained(self)
+             .subscribe(onNext: { vc, indexPath in
+                 vc.mainView.activateButtons()
+            }).disposed(by: disposeBag)
+        
+        mainView.requestButton.rx.tap
+            .map{ Reactor.Action.requestCoffee }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        mainView.confirmButton.rx.tap
+            .map{ Reactor.Action.confirmRecived }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // MARK: State
+        reactor.state.map(\.coffeePurchasers)
+            .bind(to: mainView.collectionView.rx.items(cellIdentifier: ProfileCell.reuseIdentifier, cellType: ProfileCell.self)) { _, item, cell in
+                cell.configure(user: item.acceptedAnswerer)
+            }.disposed(by: disposeBag)
+        
+        reactor.state.map(\.coffeePurchasers)
+            .map { "\($0.count)" }
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe { vc, count in
+                vc.mainView.cupsLabel.text = count
+            }.disposed(by: disposeBag)
+          
+        reactor.state.map(\.isRequesting) 
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .subscribe { vc, isRequesting in
+                if isRequesting {
+                    vc.setTimer()
+                } else {
+                    vc.timer?.invalidate()
+                }
+                vc.mainView.requestButton.isEnabled = !isRequesting
+            }.disposed(by: disposeBag)
+    }
+    
+    private func setTimer(){
+        var leftTime = 300
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
+            print("leftTime : \(leftTime)")
+            leftTime -= 1
+            if leftTime <= 0 {
+                self?.reactor?.action.onNext(.endRequestTimer)
+            }
+        })
     }
 }
 
 
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource
-extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.reuseIdentifier, for: indexPath) as! ProfileCell
-        let image = UIImage(systemName: "person") ?? UIImage() // tempImage
-        cell.configure(data: image)
-        return cell
-    }
-
+extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 50)
     }
