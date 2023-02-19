@@ -12,6 +12,11 @@ import PinLayout
 import RxSwift
 import RxCocoa
 
+protocol myQuestionsViewDelegate: NSObjectProtocol {
+    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question)
+//    func deleteQuestionButtonClicked(_ view: MyQuestionsView)
+}
+
 class MyQuestionsView: UIView {
     fileprivate let tableView = UITableView(frame: .zero, style: .grouped)
     fileprivate let MyQuestionsCellTemplate = MyQuestionsCell()
@@ -21,10 +26,12 @@ class MyQuestionsView: UIView {
     
     fileprivate var indexPaths: Set<IndexPath> = []
     fileprivate var question: [Question] = []
-    fileprivate var methods: [Method] = []
+//    fileprivate var methods: [Method] = []
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
+    
+    weak var delegate: myQuestionsViewDelegate?
     
     init() {
         super.init(frame: .zero)
@@ -49,10 +56,10 @@ class MyQuestionsView: UIView {
         tableView.reloadData()
     }
     
-    func configure(methods: [Method]) {
-        self.methods = methods
-        tableView.reloadData()
-    }
+//    func configure(methods: [Method]) {
+//        self.methods = methods
+//        tableView.reloadData()
+//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -107,12 +114,12 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
 //        cell.configure(methods: methods[indexPath.row])
         
         cell.state = cellIsExpanded(at: indexPath) ? .expanded : .collapsed
-        
         cell.deleteQuestionButton.rx.tap
             .bind { [weak self] (_) in
                 guard let self = self else {return}
-                print("삭제버튼 누름")
-                self.deleteQuestionUseCase?.excute(question: question)
+                print("삭제버튼")
+//                self.delegate?.deleteQuestionButtonClicked(self)
+                self.delegate?.deleteQuestionButtonClicked(self, question: question)
             }.disposed(by: disposeBag)
         
         cell.selectionAnswerButton.rx.tap

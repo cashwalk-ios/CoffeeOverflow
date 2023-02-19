@@ -23,11 +23,14 @@ class MyQuestionsCell: UITableViewCell {
     fileprivate let rootFlexContainer: UIView = UIView()
     fileprivate let detailView = UIView()
     fileprivate let questionLabel = UILabel()
-    fileprivate let participantsCountLabel = UILabel()
+    fileprivate let answerCountLabel = UILabel()
     fileprivate let iconImageView = UIImageView()
     var deleteQuestionButton = UIButton()
     var selectionAnswerButton = UIButton()
-    fileprivate var participantsView = ParticipantsView()
+    fileprivate var answerView = AnswerView()
+    fileprivate var question: Question?
+    
+    fileprivate var indexPaths: Set<IndexPath> = []
     
     var selectedIndexPathRow: Int?
     
@@ -48,18 +51,8 @@ class MyQuestionsCell: UITableViewCell {
         selectionStyle = .none
         separatorInset = .zero
         
-        participantsView.collectionView.delegate = self
-        participantsView.collectionView.dataSource = self
-        
-        participantsView.configure(profile: [
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!),
-//            Profile(name: "Mock", image: URL(string: "https://i.pinimg.com/736x/76/cc/b4/76ccb45bc61b098c7b9b75de62fcf533--house-design-campo-grande.jpg")!)
-        ])
+        answerView.collectionView.delegate = self
+        answerView.collectionView.dataSource = self
         
         iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
@@ -79,22 +72,22 @@ class MyQuestionsCell: UITableViewCell {
         questionLabel.lineBreakMode = .byTruncatingTail
         questionLabel.numberOfLines = 2
         
-        let participantsCount = 7
+        let AnswerCount = 7
         
-        participantsCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
-        participantsCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
-        participantsCountLabel.lineBreakMode = .byTruncatingTail
-        participantsCountLabel.text = "0명참여중"
+        answerCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
+        answerCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
+        answerCountLabel.lineBreakMode = .byTruncatingTail
+        answerCountLabel.text = "0명참여중"
         
         
         var textString = ""
-        if let temp = participantsCountLabel.text {
+        if let temp = answerCountLabel.text {
             textString = temp
         }
         let attributedStr = NSMutableAttributedString(string: textString)
         attributedStr.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 8, weight: .regular), range: (textString as NSString).range(of: "명참여중"))
         attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
-        participantsCountLabel.attributedText = attributedStr
+        answerCountLabel.attributedText = attributedStr
         
         deleteQuestionButton.backgroundColor = .black
         deleteQuestionButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
@@ -109,24 +102,13 @@ class MyQuestionsCell: UITableViewCell {
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                     flex.addItem(questionLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(participantsCountLabel)
+                        flex.addItem(answerCountLabel)
                         flex.addItem(iconImageView).size(30)
                     }
                 }
                 flex.addItem(detailView).direction(.column).define{ (flex) in
                     flex.addItem().height(10)
-//                    flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-//                        for buttonTag in 1...participantsCount {
-//                            let iconImage = CoffeeOverflowAsset.icArrowDownGray.image
-//                            let participantsButton = UIButton()
-//                            participantsButton.backgroundColor = .black
-//                            participantsButton.setBackgroundImage(iconImage, for: .normal)
-//                            participantsButton.layer.cornerRadius = 10
-//                            participantsButton.tag = buttonTag
-//                            flex.addItem(participantsButton).marginBottom(5).marginRight(5).size(40)
-//                        }
-                    flex.addItem(participantsView).width(100%).height(50)
-//                    }
+                    flex.addItem(answerView).width(100%).height(50)
                     flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                         flex.addItem(deleteQuestionButton).size(40)
@@ -144,13 +126,14 @@ class MyQuestionsCell: UITableViewCell {
     }
     
     func configure(question: Question) {
+        self.question = question
         questionLabel.text = question.text
         print("질문: \(question.text)")
         let answererCount = question.answerer?.count
-        participantsCountLabel.text = "\(answererCount)명참여중"
+        answerCountLabel.text = "\(answererCount)명참여중"
         
         questionLabel.flex.markDirty()
-        participantsCountLabel.flex.markDirty()
+        answerCountLabel.flex.markDirty()
     }
     
     func configure(methods: Method) {
@@ -196,13 +179,30 @@ class MyQuestionsCell: UITableViewCell {
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+//        return 7
+        return question?.answerer?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCell.reuseIdentifier, for: indexPath) as! ProfileCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AnswerCell.reuseIdentifier, for: indexPath) as! AnswerCell
+        
+        if selectedIndexPathRow == indexPath.row {
+            cell.profileImageView.layer.borderColor = CoffeeOverflowAsset.primaryColor.color.cgColor
+        } else {
+            cell.profileImageView.layer.borderColor = UIColor.clear.cgColor
+        }
+        
+        let profileImage = question?.answerer?[indexPath.row].profileImage
+
+        if let data = try? Data(contentsOf: profileImage!) {
+            if let image = UIImage(data: data) {
+                cell.configure(data: image)
+            }
+        }
+        
         let image = UIImage(systemName: "person") ?? UIImage() // tempImage
-        cell.configure(data: image) // 여기 User 정보 넘겨야 함 
+        cell.configure(data: image)
+        
         return cell
     }
 
@@ -211,7 +211,8 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
+        print("답변자 선택 : \(indexPath.row)")
         selectedIndexPathRow = indexPath.row
+        collectionView.reloadData()
     }
 }
