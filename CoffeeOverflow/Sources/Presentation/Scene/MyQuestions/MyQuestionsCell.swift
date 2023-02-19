@@ -179,7 +179,6 @@ class MyQuestionsCell: UITableViewCell {
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return 7
         return question?.answerer?.count ?? 0
     }
     

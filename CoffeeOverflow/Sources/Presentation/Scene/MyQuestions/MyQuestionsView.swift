@@ -14,7 +14,6 @@ import RxCocoa
 
 protocol myQuestionsViewDelegate: NSObjectProtocol {
     func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question)
-//    func deleteQuestionButtonClicked(_ view: MyQuestionsView)
 }
 
 class MyQuestionsView: UIView {
@@ -26,7 +25,6 @@ class MyQuestionsView: UIView {
     
     fileprivate var indexPaths: Set<IndexPath> = []
     fileprivate var question: [Question] = []
-//    fileprivate var methods: [Method] = []
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
@@ -55,11 +53,6 @@ class MyQuestionsView: UIView {
         self.question = question
         tableView.reloadData()
     }
-    
-//    func configure(methods: [Method]) {
-//        self.methods = methods
-//        tableView.reloadData()
-//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -104,21 +97,18 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return question.count
-//        return methods.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyQuestionsCell.reuseIdentifier, for: indexPath) as! MyQuestionsCell
         let question = self.question[indexPath.row]
         cell.configure(question: question)
-//        cell.configure(methods: methods[indexPath.row])
         
         cell.state = cellIsExpanded(at: indexPath) ? .expanded : .collapsed
         cell.deleteQuestionButton.rx.tap
             .bind { [weak self] (_) in
                 guard let self = self else {return}
                 print("삭제버튼")
-//                self.delegate?.deleteQuestionButtonClicked(self)
                 self.delegate?.deleteQuestionButtonClicked(self, question: question)
             }.disposed(by: disposeBag)
         
