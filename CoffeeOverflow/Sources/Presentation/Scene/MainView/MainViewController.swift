@@ -77,7 +77,7 @@ class MainViewController: UIViewController, View {
         // MARK: State
         reactor.state.map(\.coffeePurchasers)
             .bind(to: mainView.collectionView.rx.items(cellIdentifier: ProfileCell.reuseIdentifier, cellType: ProfileCell.self)) { _, item, cell in
-                cell.configure(user: item.acceptedAnswerer)
+                cell.configure(user: item.user)
             }.disposed(by: disposeBag)
         
         reactor.state.map(\.coffeePurchasers)
