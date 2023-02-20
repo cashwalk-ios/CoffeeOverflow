@@ -21,7 +21,6 @@ class LoginViewController: UIViewController, View {
     var disposeBag = DisposeBag()
 
     private var mainViewController: MainViewController
-    private var myQuestionsViewController: MyQuestionsViewController
     
     fileprivate var loginView: LoginView {
         return self.view as! LoginView
@@ -31,9 +30,8 @@ class LoginViewController: UIViewController, View {
         super.viewDidLoad()
     }
     
-    init(reactor: LoginReactor, mainViewController: MainViewController, myQuestionsViewController: MyQuestionsViewController) {
+    init(reactor: LoginReactor, mainViewController: MainViewController) {
         self.mainViewController = mainViewController
-        self.myQuestionsViewController = myQuestionsViewController
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -52,15 +50,8 @@ class LoginViewController: UIViewController, View {
             .flatMap { return Single.create { single in
 
                 Task { do {
-//                    let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: self)
-//                    self.myQuestionsViewController.modalPresentationStyle = .fullScreen
-//                    self.present(self.mainViewController, animated: true)
-                    self.myQuestionsViewController.isModalInPresentation = true
-                    self.present(self.myQuestionsViewController, animated: false)
-                    
-//                    self.mainViewController.modalPresentationStyle = .fullScreen
-//                    self.present(self.mainViewController, animated: true)
-//                    single(.success(result))
+                    let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: self)
+                    single(.success(result))
                 } catch {
                     single(.failure(error))
                 }}

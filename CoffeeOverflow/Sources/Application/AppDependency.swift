@@ -69,8 +69,7 @@ extension AppDependency {
         let mainViewController = MainViewController(reactor: mainReactor)
         let loginViewController = LoginViewController(
             reactor: loginReactor,
-            mainViewController: mainViewController,
-            myQuestionsViewController: myQuestionsViewController
+            mainViewController: mainViewController
         )
         
 
