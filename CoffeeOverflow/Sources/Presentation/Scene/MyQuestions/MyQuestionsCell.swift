@@ -72,8 +72,6 @@ class MyQuestionsCell: UITableViewCell {
         questionLabel.lineBreakMode = .byTruncatingTail
         questionLabel.numberOfLines = 2
         
-        let AnswerCount = 7
-        
         answerCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
         answerCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
         answerCountLabel.lineBreakMode = .byTruncatingTail
@@ -129,8 +127,14 @@ class MyQuestionsCell: UITableViewCell {
         self.question = question
         questionLabel.text = question.text
         print("질문: \(question.text)")
-        let answererCount = question.answerer?.count
-        answerCountLabel.text = "\(answererCount)명참여중"
+        if let answererCount = question.answerer?.count {
+            answerCountLabel.text = "\(answererCount)명참여중"
+            guard let textString = answerCountLabel.text else {return}
+            let attributedStr = NSMutableAttributedString(string: textString)
+            attributedStr.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 8, weight: .regular), range: (textString as NSString).range(of: "명참여중"))
+            attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
+            answerCountLabel.attributedText = attributedStr
+        }
         
         questionLabel.flex.markDirty()
         answerCountLabel.flex.markDirty()
@@ -179,6 +183,8 @@ class MyQuestionsCell: UITableViewCell {
 // MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let count = question?.answerer?.count ?? 0
+        print("count: \(count)")
         return question?.answerer?.count ?? 0
     }
     
@@ -190,17 +196,10 @@ extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate,
         } else {
             cell.profileImageView.layer.borderColor = UIColor.clear.cgColor
         }
-        
-        let profileImage = question?.answerer?[indexPath.row].profileImage
 
-        if let data = try? Data(contentsOf: profileImage!) {
-            if let image = UIImage(data: data) {
-                cell.configure(data: image)
-            }
+        if let profileImage = self.question?.answerer?[indexPath.row].profileImage {
+            cell.configure(data: profileImage)
         }
-        
-        let image = UIImage(systemName: "person") ?? UIImage() // tempImage
-        cell.configure(data: image)
         
         return cell
     }

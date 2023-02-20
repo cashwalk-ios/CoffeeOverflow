@@ -46,6 +46,10 @@ class AnswerView: UIView {
         rootFlexContainer.flex.layout()
     }
     
+    func answerViewCollectionViewReload() {
+        collectionView.reloadData()
+    }
+    
 }
 
 

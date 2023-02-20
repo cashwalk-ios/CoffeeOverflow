@@ -19,7 +19,8 @@ class AnswerCell: UICollectionViewCell {
         imageView.backgroundColor = .black
         imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.layer.borderWidth = 2
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 15.0
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -32,8 +33,9 @@ class AnswerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(data: UIImage) {
-        profileImageView.image = data
+    func configure(data: URL) {
+//        profileImageView.image = data.withRoundedCorners(radius: 15.0)
+        profileImageView.load(url: data)
     }
     
     private func setUI() {
@@ -41,3 +43,24 @@ class AnswerCell: UICollectionViewCell {
         profileImageView.pin.all()
     }
 }
+
+
+extension UIImage {
+       // image with rounded corners
+       public func withRoundedCorners(radius: CGFloat? = nil) -> UIImage? {
+           let maxRadius = min(size.width, size.height) / 2
+           let cornerRadius: CGFloat
+           if let radius = radius, radius > 0 && radius <= maxRadius {
+               cornerRadius = radius
+           } else {
+               cornerRadius = maxRadius
+           }
+           UIGraphicsBeginImageContextWithOptions(size, false, scale)
+           let rect = CGRect(origin: .zero, size: size)
+           UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+           draw(in: rect)
+           let image = UIGraphicsGetImageFromCurrentImageContext()
+           UIGraphicsEndImageContext()
+           return image
+       }
+   }

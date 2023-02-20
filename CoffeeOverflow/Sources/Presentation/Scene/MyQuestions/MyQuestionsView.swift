@@ -28,20 +28,20 @@ class MyQuestionsView: UIView {
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let disposeBagCell = DisposeBag()
+    let disposeBagCell = DisposeBag()
     
     weak var delegate: myQuestionsViewDelegate?
     
     init() {
         super.init(frame: .zero)
-        self.backgroundColor = .black
+        self.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
 
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 10
         tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
         tableView.register(MyQuestionsHeader.self, forHeaderFooterViewReuseIdentifier: MyQuestionsHeader.reuseIdentifier)
-        tableView.backgroundColor = .black
+        tableView.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
         addSubview(tableView)
     }
     
@@ -60,6 +60,13 @@ class MyQuestionsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         tableView.pin.all(safeAreaInsets)
+    }
+    
+    func tableViewReload() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            print("reloadDaata")
+        }
     }
 }
 
@@ -125,7 +132,9 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                 }
                 print(answer.email)
                 self.selectionAnswerUseCase?.excute(question: question, answer: answer)
-                    .subscribe()
+                    .subscribe(onCompleted: {
+                        self.tableViewReload()
+                    })
                     .disposed(by: self.disposeBagCell)
             }.disposed(by: disposeBag)
         
