@@ -28,6 +28,7 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
             print("삭제버튼 누름")
             self.deleteQuestionUseCase?.excute(question: question)
                 .subscribe(onCompleted: {
+                    self.setUseCase()
                     view.tableViewReload()
                 })
                 .disposed(by: view.disposeBagCell)
@@ -50,6 +51,7 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUseCase()
     }
     
     override func loadView() {
@@ -63,7 +65,9 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         self.fetchMyQuestionsUseCase = fetchMyQuestionsUseCase
         self.selectionAnswerUseCase = selectionAnswerUseCase
         self.deleteQuestionUseCase = deleteQuestionUseCase
-        
+    }
+    
+    fileprivate func setUseCase() {
         guard let selectionAnswerUseCase = self.selectionAnswerUseCase, let deleteQuestionUseCase = self.deleteQuestionUseCase else {return}
         
         self.fetchMyQuestionsUseCase?.excute()
@@ -76,7 +80,6 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
             })
             .disposed(by: disposeBag)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

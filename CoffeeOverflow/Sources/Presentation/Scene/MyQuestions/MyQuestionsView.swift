@@ -133,6 +133,7 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                 print(answer.email)
                 self.selectionAnswerUseCase?.excute(question: question, answer: answer)
                     .subscribe(onCompleted: {
+                        self.question.remove(at: indexPath.row)
                         self.tableViewReload()
                     })
                     .disposed(by: self.disposeBagCell)
