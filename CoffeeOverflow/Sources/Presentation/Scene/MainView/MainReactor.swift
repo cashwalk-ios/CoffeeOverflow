@@ -74,7 +74,7 @@ class MainReactor: Reactor {
         
         switch mutation {
         
-        case let .setMySelectedQuestions(question):  
+        case let .setMySelectedQuestions(question):
             newState.coffeePurchasers = question
         case let .setRequestState(state):
             newState.isRequesting = state

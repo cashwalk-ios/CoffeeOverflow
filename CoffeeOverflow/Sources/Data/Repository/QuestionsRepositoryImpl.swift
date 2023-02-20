@@ -14,7 +14,10 @@ class QuestionsRepositoryImpl: QuestionsRepository {
     
     func putQuestion(_ question: Question) throws {
         try self.firestoreDataSource.putAsk(ask: AskDTO(
-            acceptedAnswerer: question.acceptedAnswerer,
+            acceptedAnswerer: UserDTO(
+                email: question.acceptedAnswerer?.email ?? "",
+                profileImage: question.acceptedAnswerer?.profileImage?.absoluteString ?? "",
+                slackId: question.acceptedAnswerer?.slackId ?? ""),
             channelId: question.channelId,
             text: question.text,
             ts: question.timestamp,
