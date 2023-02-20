@@ -41,7 +41,6 @@ class LoginViewController: UIViewController, View {
     
     override func loadView() {
         view = LoginView()
-        reactor?.action.onNext(.checkSingIn)
     }
     
     func bind(reactor: LoginReactor) {
@@ -69,5 +68,6 @@ class LoginViewController: UIViewController, View {
                 self.present(self.mainViewController, animated: true)
             })
             .disposed(by: self.disposeBag)
+        
     }
 }

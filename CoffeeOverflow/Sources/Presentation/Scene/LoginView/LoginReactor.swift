@@ -17,32 +17,22 @@ class LoginReactor: Reactor {
     init(signInUseCase: SignInUseCase) {
         self.signInUseCase = signInUseCase
     }
-    
-    private let signInUsecase: SignInUseCase
-    private let checkSingInUsecase: CheckIsSignedInUseCase
-    
+
     private var disposeBag = DisposeBag()
     
     enum Action {
-
-        case checkSingIn
-        case login
+        case googleSignin(result: GIDSignInResult)
     }
     
     enum Mutation {
-        case setLoginState(Bool)
+        case setSigninReslut(isSuccess: Bool)
     }
     
     struct State {
-        var isLogin: Bool = false
+        var isSigninSuccess: Bool = false
     }
     
     let initialState: State = State()
-    
-    init(signInUsecase: SignInUseCase, checkSingInUsecase: CheckIsSignedInUseCase) {
-        self.signInUsecase = signInUsecase
-        self.checkSingInUsecase = checkSingInUsecase
-    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
