@@ -73,8 +73,12 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         self.fetchMyQuestionsUseCase?.excute()
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { questions in
-                print("questions: ", questions)
-                self.myQuestionsView.configure(question: questions, selectionAnswerUseCase: selectionAnswerUseCase, deleteQuestionUseCase: deleteQuestionUseCase)
+                print("questions: ", questions.count)
+                if questions.count > 0 {
+                    self.myQuestionsView.configure(question: questions, selectionAnswerUseCase: selectionAnswerUseCase, deleteQuestionUseCase: deleteQuestionUseCase)
+                } else {
+                    self.dismiss(animated: true)
+                }
             }, onFailure: { error in
                 print("Error: ", error)
             })

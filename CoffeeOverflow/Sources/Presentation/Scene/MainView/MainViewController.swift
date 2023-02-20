@@ -105,7 +105,7 @@ class MainViewController: UIViewController, View {
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .subscribe { vc, _ in
-                self.modalPresentationStyle = .fullScreen
+                self.questionVC.isModalInPresentation = true
                 self.present(self.questionVC, animated: true)
             }.disposed(by: disposeBag)
     }
