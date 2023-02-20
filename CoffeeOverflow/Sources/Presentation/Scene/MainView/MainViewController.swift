@@ -87,6 +87,14 @@ class MainViewController: UIViewController, View {
                 vc.mainView.cupsLabel.text = count
             }.disposed(by: disposeBag)
         
+        reactor.state.map(\.coffeePurchasers)
+            .map { $0.count != 0 }
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe { vc, isExistCoffee in
+                vc.mainView.emptyLabel.isHidden = isExistCoffee
+            }.disposed(by: disposeBag)
+        
         reactor.state.map(\.isRequesting)
             .distinctUntilChanged()
             .withUnretained(self)

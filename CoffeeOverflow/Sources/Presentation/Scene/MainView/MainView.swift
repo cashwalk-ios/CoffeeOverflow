@@ -53,6 +53,17 @@ class MainView: UIView {
         return button
     }()
     
+    private(set) var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "사용하실 수 있는 커피가 없어요.\n어서 좋은 답변자가 되어 커피를 얻어보세요!"
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = CoffeeOverflowAsset.gray3.color
+        label.sizeToFit()
+        return label
+    }()
+    
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         super.init(frame: .zero)
@@ -77,6 +88,7 @@ class MainView: UIView {
             }
         }
         addSubview(rootFlexContainer)
+        addSubview(emptyLabel)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -97,6 +109,8 @@ class MainView: UIView {
         super.layoutSubviews()
         rootFlexContainer.pin.all(pin.safeArea)
         rootFlexContainer.flex.layout()
+        emptyLabel.pin.vCenter().hCenter()
+        emptyLabel.flex.layout()
     }
 }
 
