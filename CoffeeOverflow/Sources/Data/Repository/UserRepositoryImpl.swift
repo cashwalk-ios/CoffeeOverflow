@@ -21,7 +21,6 @@ class UserRepositoryImpl: UserReposiotry {
     
     func insertUser(_ user: User) throws {
         try self.firestoreDataSource.insertUser(user: UserDTO(
-            id: user.slackId,
             email: user.email,
             profileImage: user.profileImage?.absoluteString ?? "",
             slackId: user.slackId
