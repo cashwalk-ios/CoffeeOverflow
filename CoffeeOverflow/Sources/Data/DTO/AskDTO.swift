@@ -35,7 +35,7 @@ extension AskDTO {
             channelId: self.channelId,
             text: self.text,
             timestamp: self.ts,
-            userId: self.userId
+            user: User(slackId: self.userId, email: nil, profileImage: nil)
         )
     }
 }

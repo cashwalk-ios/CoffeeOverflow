@@ -25,7 +25,7 @@ extension FetchMyQuestionsUseCase {
     private func filterMyActivatingQuestions(_ questions: [Question]) -> [Question] {
         let mySlackId = self.userReposiotry.fetchMySlackId()
         return questions.filter {
-            $0.acceptedAnswerer == nil && $0.userId == mySlackId
+            $0.acceptedAnswerer == nil && $0.user.slackId == mySlackId
         }
     }
 

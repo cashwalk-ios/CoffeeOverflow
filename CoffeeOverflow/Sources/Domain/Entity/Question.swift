@@ -6,6 +6,6 @@ struct Question {
     let channelId: String
     let text: String
     let timestamp: String
-    let userId: String
+    var user: User
     var answerer: [User]?
 }

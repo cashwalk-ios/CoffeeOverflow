@@ -22,7 +22,7 @@ class QuestionsRepositoryImpl: QuestionsRepository {
             channelId: question.channelId,
             text: question.text,
             ts: question.timestamp,
-            userId: question.userId
+            userId: question.user.slackId
         ))
     }
     

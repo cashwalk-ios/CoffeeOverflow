@@ -15,6 +15,7 @@ class FetchMyCoffeePurchaserUseCase {
     func excute() -> Single<[Question]> {
         self.questionsRepository.fetchQuestions()
             .map { self.filterMyAnsweredQuestion($0) }
+            .flatMap { self.zipWithSlackUser(questions: $0) }
     }
     
 }
@@ -28,13 +29,15 @@ extension FetchMyCoffeePurchaserUseCase {
         }
     }
 
-    private func convertQuestionsToUsers(questions: [Question]) -> Single<[User]> {
+    private func zipWithSlackUser(questions: [Question]) -> Single<[Question]> {
         return self.userReposiotry.fetchUsers()
             .map { users in
                 questions.map { question in
-                    users.first { $0.slackId == question.userId }
+                    guard let user = users.first(where: { $0.slackId == question.user.slackId }) else { return question }
+                    var newQuestion = question
+                    newQuestion.user = user
+                    return newQuestion
                 }
-                .compactMap { $0 }
             }
     }
 
