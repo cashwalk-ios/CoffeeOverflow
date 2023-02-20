@@ -14,8 +14,10 @@ class MainReactor: Reactor {
     private let confirmResponsedCoffeeUseCase: ConfirmResponsedCoffeeUseCase
     private let requestCoffeeUseCase: RequestCoffeeUseCase
     private let fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase
+    private let fetchMyQuestionsUseCase: FetchMyQuestionsUseCase
     
     enum Action {
+        case fetchMyQuestion
         case fetch
         case requestCoffee
         case endRequestTimer
@@ -27,23 +29,26 @@ class MainReactor: Reactor {
         case setMySelectedQuestions([Question])
         case setRequestState(Bool)
         case setSelectedQuestion(Question)
+        case setisShowQuestionView(Bool)
     }
     
     struct State {
         var coffeePurchasers: [Question] = [Question]()
         var isRequesting: Bool = false // 요청중 상태
         var selectedQuestion: Question?
+        var isShowQuestionView: Bool = false
     }
     
     let initialState: State = State()
     
     init(confirmResponsedCoffeeUseCase: ConfirmResponsedCoffeeUseCase,
          requestCoffeeUseCase: RequestCoffeeUseCase,
-         fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase
-    ) {
+         fetchMyCoffeePurchaserUseCase: FetchMyCoffeePurchaserUseCase,
+         fetchMyQuestionsUseCase : FetchMyQuestionsUseCase) {
         self.confirmResponsedCoffeeUseCase = confirmResponsedCoffeeUseCase
         self.requestCoffeeUseCase = requestCoffeeUseCase
         self.fetchMyCoffeePurchaserUseCase = fetchMyCoffeePurchaserUseCase
+        self.fetchMyQuestionsUseCase = fetchMyQuestionsUseCase
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -66,6 +71,11 @@ class MainReactor: Reactor {
         case let.select(index):
             let selectedQuestion = currentState.coffeePurchasers[index]
             return .just(.setSelectedQuestion(selectedQuestion))
+        case .fetchMyQuestion:
+            return fetchMyQuestionsUseCase.excute()
+                .map { question in
+                    Mutation.setisShowQuestionView(question.count != 0) }
+                .asObservable()
         }
     }
     
@@ -80,6 +90,8 @@ class MainReactor: Reactor {
             newState.isRequesting = state
         case let .setSelectedQuestion(question):
             newState.selectedQuestion = question
+        case let .setisShowQuestionView(isShow):
+            newState.isShowQuestionView = isShow
         }
         
         return newState
