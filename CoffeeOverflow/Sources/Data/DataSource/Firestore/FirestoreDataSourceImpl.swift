@@ -29,7 +29,7 @@ class FirestoreDataSourceImpl: FirestoreDataSource {
     }
     
     func insertUser(user: UserDTO) throws {
-        _ = try db.collection(Collection.users.rawValue).addDocument(from: user, encoder: Firestore.Encoder())
+        _ = try db.collection(Collection.users.rawValue).document(user.slackId).setData(from: user, encoder: Firestore.Encoder())
     }
     
     func fetchAsks() async throws -> [AskDTO] {
