@@ -23,7 +23,7 @@ class ProfileCell: UICollectionViewCell {
         return imageView
     }()
     
-    override var isSelected: Bool {
+    override var isHighlighted: Bool {
             didSet{
                 if isSelected {
                     profileImageView.layer.borderColor = CoffeeOverflowAsset.primaryColor.color.cgColor
