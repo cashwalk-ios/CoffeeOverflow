@@ -2,17 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>GIDClientID</key>
-    <string>799696447306-3gf38rrf75127v4bk2b2oo9kjiqtbick.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.799696447306-3gf38rrf75127v4bk2b2oo9kjiqtbick</string>
-        </array>
-      </dict>
-    </array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>GIDClientID</key>
+	<string>799696447306-3gf38rrf75127v4bk2b2oo9kjiqtbick.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.799696447306-3gf38rrf75127v4bk2b2oo9kjiqtbick</string>
+			</array>
+		</dict>
+	</array>
 	<key>SLACK_BOT_TOKEN</key>
 	<string>$(SLACK_BOT_TOKEN)</string>
 	<key>CFBundleDevelopmentRegion</key>
