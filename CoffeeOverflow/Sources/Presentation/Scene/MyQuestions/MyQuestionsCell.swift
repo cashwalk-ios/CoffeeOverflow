@@ -47,7 +47,7 @@ class MyQuestionsCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = .black
+        contentView.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
         selectionStyle = .none
         separatorInset = .zero
         
@@ -56,15 +56,14 @@ class MyQuestionsCell: UITableViewCell {
         
         iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
-        rootFlexContainer.backgroundColor = .black
+        rootFlexContainer.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
         contentView.addSubview(rootFlexContainer)
         
         let bgView = UIView()
-        bgView.backgroundColor = UIColor(red: 39.0 / 255.0, green: 39.0 / 255.0, blue: 41.0 / 255.0, alpha: 1.0)
+        bgView.backgroundColor = CoffeeOverflowAsset.gray1.color
         bgView.layer.cornerRadius = 10
         
         let headerView = UIView()
-        let detailTopView = UIView()
         let detailBottomView = UIView()
         
         questionLabel.font = UIFont.boldSystemFont(ofSize: 12)
@@ -87,11 +86,13 @@ class MyQuestionsCell: UITableViewCell {
         attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
         answerCountLabel.attributedText = attributedStr
         
-        deleteQuestionButton.backgroundColor = .black
+        deleteQuestionButton.backgroundColor = CoffeeOverflowAsset.gray2.color
         deleteQuestionButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
         deleteQuestionButton.layer.cornerRadius = 10
+        deleteQuestionButton.layer.borderColor = UIColor.white.cgColor
+        deleteQuestionButton.layer.borderWidth = 0.5
         
-        selectionAnswerButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
+        selectionAnswerButton.backgroundColor = CoffeeOverflowAsset.primaryColor.color
         selectionAnswerButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
         selectionAnswerButton.layer.cornerRadius = 10
 
