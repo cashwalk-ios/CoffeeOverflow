@@ -27,6 +27,8 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         let okAction = UIAlertAction(title: "삭제", style: .default) { _ in
             print("삭제버튼 누름")
             self.deleteQuestionUseCase?.excute(question: question)
+                .subscribe()
+                .disposed(by: self.disposeBag)
         }
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)

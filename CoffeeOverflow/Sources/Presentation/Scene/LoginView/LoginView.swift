@@ -13,10 +13,10 @@ import PinLayout
 class LoginView: UIView {
 
     fileprivate let rootFlexContainer = UIView()
-
+    
     private(set) var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Coffee Overflow"
+        label.text = "Coffee\nOverflow"
         label.font = .boldSystemFont(ofSize: 40)
         label.textColor = .white
         label.numberOfLines = 2
@@ -30,34 +30,38 @@ class LoginView: UIView {
     }()
 
     private(set) var loginButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle(" Sign Up with Google", for: .normal)
-        button.setTitleColor(.gray, for: .normal)
+        let button = UIButton(type: .system)
         button.backgroundColor = .white
-        button.setImage(CoffeeOverflowAsset.googleLogo.image, for: .normal)
         button.layer.cornerRadius = 10
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        button.setImage(
+            CoffeeOverflowAsset.continueWithGoogle.image.withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         return button
     }()
     
     private var bgImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.image = CoffeeOverflowAsset.bgGradient.image
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 
     init() {
         super.init(frame: .zero)
-        rootFlexContainer.flex.justifyContent(.spaceAround).direction(.column).marginHorizontal(30).define { (flex) in
-            flex.addItem(titleLabel).width(50%)
-            flex.addItem().alignItems(.center).direction(.column).define { flex in
-                flex.addItem(imageView).height(250).width(250).marginTop(10)
+        self.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
+        self.rootFlexContainer.flex
+            .alignItems(.center)
+            .justifyContent(.start)
+            .direction(.column)
+            .marginHorizontal(30)
+            .define { flex in
+                flex.addItem(self.titleLabel).width(100%).marginTop(50)
+                flex.addItem(self.imageView).width(100%).aspectRatio(1).marginTop(10)
             }
-            flex.addItem(UIView()).height(100)
-            flex.addItem(loginButton).height(54)
-        }
-        addSubview(bgImageView)
-        addSubview(rootFlexContainer)
+        self.addSubview(bgImageView)
+        self.addSubview(rootFlexContainer)
+        self.addSubview(loginButton)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,9 +70,12 @@ class LoginView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        bgImageView.pin.top().left().right().pinEdges()
-        bgImageView.pin.width(100%).aspectRatio()
-        rootFlexContainer.pin.all(pin.safeArea)
-        rootFlexContainer.flex.layout()
+        self.bgImageView.pin.top().left().right().pinEdges()
+        self.bgImageView.pin.width(100%).aspectRatio()
+        self.rootFlexContainer.pin.all(pin.safeArea)
+        self.rootFlexContainer.flex.layout()
+        self.loginButton.pin.height(54)
+        self.loginButton.pin.bottom(pin.safeArea).marginBottom(30)
+        self.loginButton.pin.left().right().margin(30)
     }
 }

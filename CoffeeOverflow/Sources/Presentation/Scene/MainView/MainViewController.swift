@@ -13,6 +13,7 @@ import PinLayout
 
 class MainViewController: UIViewController, View {
 
+//    private var myQuestionsViewController: MyQuestionsViewController
     var disposeBag = DisposeBag()
     
     fileprivate var mainView: MainView {
@@ -21,13 +22,21 @@ class MainViewController: UIViewController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        DispatchQueue.main.async {
+////            self.modalPresentationStyle = .fullScreen
+//            self.present(self.myQuestionsViewController, animated: true)
+//        }
     }
     
+//    init(reactor: MainReactor, myQuestionsViewController: MyQuestionsViewController) {
     init(reactor: MainReactor) {
+//        self.myQuestionsViewController = myQuestionsViewController
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
+       
     }
     
     required init?(coder: NSCoder) {

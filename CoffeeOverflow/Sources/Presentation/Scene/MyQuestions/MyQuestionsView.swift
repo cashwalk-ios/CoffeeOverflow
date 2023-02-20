@@ -28,6 +28,7 @@ class MyQuestionsView: UIView {
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let disposeBagCell = DisposeBag()
     
     weak var delegate: myQuestionsViewDelegate?
     
@@ -50,6 +51,8 @@ class MyQuestionsView: UIView {
     
     func configure(question: [Question], selectionAnswerUseCase: SelectionAnswerUseCase, deleteQuestionUseCase: DeleteQuestionUseCase) {
         print("질문??: \(question)")
+        self.selectionAnswerUseCase = selectionAnswerUseCase
+        self.deleteQuestionUseCase = deleteQuestionUseCase
         self.question = question
         tableView.reloadData()
     }
@@ -116,8 +119,14 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
             .bind { [weak self] (_) in
                 guard let self = self else {return}
                 print("채택버튼 누름 \(cell.selectedIndexPathRow)")
-                guard let row = cell.selectedIndexPathRow, let answer = question.answerer?[row] else {return}
+                guard let row = cell.selectedIndexPathRow, let answer = question.answerer?[row] else {
+                    print("xxxx")
+                    return
+                }
+                print(answer.email)
                 self.selectionAnswerUseCase?.excute(question: question, answer: answer)
+                    .subscribe()
+                    .disposed(by: self.disposeBagCell)
             }.disposed(by: disposeBag)
         
         return cell
