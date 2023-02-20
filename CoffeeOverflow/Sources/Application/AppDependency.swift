@@ -10,7 +10,10 @@ import Foundation
 import FirebaseAuth
 
 struct AppDependency {
-    let viewController: MainViewController
+    let checkIsSignedInUseCase: CheckIsSignedInUseCase
+
+    let loginViewController: LoginViewController
+    let mainViewController: MainViewController
 }
 
 extension AppDependency {
@@ -80,6 +83,10 @@ extension AppDependency {
         )
         
 
-        return AppDependency(viewController: mainViewController)
+        return AppDependency(
+            checkIsSignedInUseCase: checkIsSignedInUseCase,
+            loginViewController: loginViewController,
+            mainViewController: mainViewController
+        )
     }
 }
