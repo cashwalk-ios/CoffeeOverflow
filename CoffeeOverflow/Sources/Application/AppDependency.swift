@@ -35,7 +35,7 @@ extension AppDependency {
         
         // MARK: - UseCase
         let checkIsSignedInUseCase = CheckIsSignedInUseCase(userRepository: userRepository)
-        let ConfirmResponsedCoffeeUseCase = ConfirmResponsedCoffeeUseCase(questionsRepository: questionsRepository)
+        let confirmResponsedCoffeeUseCase = ConfirmResponsedCoffeeUseCase(questionsRepository: questionsRepository)
         let deleteQuestionUseCase = DeleteQuestionUseCase(questionsRepository: questionsRepository)
         let requestCoffeeUseCase = RequestCoffeeUseCase(chatRepository: chatRepository)
         let signInUseCase = SignInUseCase(userRepository: userRepository)
@@ -54,7 +54,13 @@ extension AppDependency {
         )
         
         // MARK: - Reactor
-        let mainReactor = MainReactor()
+        //ConfirmResponsedCoffeeUseCase, 
+        let mainReactor = MainReactor(
+            confirmResponsedCoffeeUseCase: confirmResponsedCoffeeUseCase,
+            requestCoffeeUseCase: requestCoffeeUseCase,
+            fetchMyCoffeePurchaserUseCase: fetchMyCoffeePurchaserUseCase
+            )
+
         let loginReactor = LoginReactor(signInUseCase: signInUseCase)
         let myQuestionsViewReactor = MyQuestionsViewReactor()
 

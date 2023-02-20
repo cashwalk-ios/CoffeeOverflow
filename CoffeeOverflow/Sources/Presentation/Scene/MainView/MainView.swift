@@ -35,23 +35,26 @@ class MainView: UIView {
         return label
     }()
 
-    private var requestButton: UIButton = {
+    private(set) var requestButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("Request", for: .normal)
         button.backgroundColor = UIColor(red: 32/255, green: 32/255, blue: 32/255, alpha: 1)
         button.setTitleColor(.white, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
+        button.isHidden = true
+        button.setTitleColor(.blue, for: .disabled)
         return button
     }()
     
-    private var confirmButton: UIButton = {
+    private(set) var confirmButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("Confirm", for: .normal)
         button.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 46/255, alpha: 1)
         button.setTitleColor(.black, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
+        button.isHidden = true
         return button
     }()
     
@@ -88,6 +91,11 @@ class MainView: UIView {
     func configure(profile: [User]) {
         self.profile = profile
         collectionView.reloadData()
+    }
+    
+    func activateButtons(){
+        self.confirmButton.isHidden = false
+        self.requestButton.isHidden = false
     }
 
     override func layoutSubviews() {
