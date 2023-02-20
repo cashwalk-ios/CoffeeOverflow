@@ -8,37 +8,47 @@
 
 import Foundation
 import ReactorKit
+import GoogleSignIn
 
 class LoginReactor: Reactor {
+
+    private let signInUseCase: SignInUseCase
+
+    init(signInUseCase: SignInUseCase) {
+        self.signInUseCase = signInUseCase
+    }
     
     enum Action {
-        
+        case googleSignin(result: GIDSignInResult)
     }
     
     enum Mutation {
-        case setLoading(Bool)
+        case setSigninReslut(isSuccess: Bool)
     }
     
     struct State {
-        
-        var isLoading: Bool = false
+        var isSigninSuccess: Bool = false
     }
     
     let initialState: State = State()
     
     func mutate(action: Action) -> Observable<Mutation> {
-        
+        switch action {
+        case .googleSignin(let result):
+            return self.signInUseCase.excute(email: result.user.profile?.email ?? "")
+                .andThen(.just(Mutation.setSigninReslut(isSuccess: true)))
+        }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         
         switch mutation {
-        
-        case let .setLoading(value):
-            newState.isLoading = value
+        case .setSigninReslut(let isSuccess):
+            newState.isSigninSuccess = isSuccess
         }
         
         return newState
     }
+
 }
