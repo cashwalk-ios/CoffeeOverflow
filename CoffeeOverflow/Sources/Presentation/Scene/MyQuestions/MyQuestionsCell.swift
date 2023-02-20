@@ -22,10 +22,17 @@ class MyQuestionsCell: UITableViewCell {
     
     fileprivate let rootFlexContainer: UIView = UIView()
     fileprivate let detailView = UIView()
-    fileprivate let nameLabel = UILabel()
-    fileprivate let ParticipantsLabel = UILabel()
-    fileprivate let descriptionLabel = UILabel()
+    fileprivate let questionLabel = UILabel()
+    fileprivate let answerCountLabel = UILabel()
     fileprivate let iconImageView = UIImageView()
+    var deleteQuestionButton = UIButton()
+    var selectionAnswerButton = UIButton()
+    fileprivate var answerView = AnswerView()
+    fileprivate var question: Question?
+    
+    fileprivate var indexPaths: Set<IndexPath> = []
+    
+    var selectedIndexPathRow: Int?
     
     var state: CellState = .collapsed {
         didSet {
@@ -44,7 +51,10 @@ class MyQuestionsCell: UITableViewCell {
         selectionStyle = .none
         separatorInset = .zero
         
-        iconImageView.image = UIImage(named: "icArrowDownGray")
+        answerView.collectionView.delegate = self
+        answerView.collectionView.dataSource = self
+        
+        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
         
         rootFlexContainer.backgroundColor = .black
         contentView.addSubview(rootFlexContainer)
@@ -57,64 +67,53 @@ class MyQuestionsCell: UITableViewCell {
         let detailTopView = UIView()
         let detailBottomView = UIView()
         
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        nameLabel.textColor = .white
-        nameLabel.lineBreakMode = .byTruncatingTail
-        nameLabel.numberOfLines = 2
+        questionLabel.font = UIFont.boldSystemFont(ofSize: 12)
+        questionLabel.textColor = .white
+        questionLabel.lineBreakMode = .byTruncatingTail
+        questionLabel.numberOfLines = 2
         
-        ParticipantsLabel.font = UIFont.boldSystemFont(ofSize: 12)
-        ParticipantsLabel.textColor = .white
-        ParticipantsLabel.lineBreakMode = .byTruncatingTail
-        ParticipantsLabel.text = "7명참여중"
+        let AnswerCount = 7
         
-        descriptionLabel.font = UIFont.systemFont(ofSize: 12)
-        descriptionLabel.textColor = .white
-        descriptionLabel.numberOfLines = 0
+        answerCountLabel.font = UIFont.boldSystemFont(ofSize: 10)
+        answerCountLabel.textColor = CoffeeOverflowAsset.primaryColor.color
+        answerCountLabel.lineBreakMode = .byTruncatingTail
+        answerCountLabel.text = "0명참여중"
         
-        let deleteButton = UIButton(type: .system)
-        deleteButton.backgroundColor = .black
-        deleteButton.setTitle("삭제", for: .normal)
-        deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        deleteButton.layer.cornerRadius = 10
         
-        let choiceButton = UIButton(type: .system)
-        choiceButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
-        choiceButton.setTitle("채택", for: .normal)
-        choiceButton.setTitleColor(.white, for: .normal)
-        choiceButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        choiceButton.layer.cornerRadius = 10
+        var textString = ""
+        if let temp = answerCountLabel.text {
+            textString = temp
+        }
+        let attributedStr = NSMutableAttributedString(string: textString)
+        attributedStr.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 8, weight: .regular), range: (textString as NSString).range(of: "명참여중"))
+        attributedStr.addAttribute(.foregroundColor, value: UIColor.white, range: (textString as NSString).range(of:"명참여중"))
+        answerCountLabel.attributedText = attributedStr
+        
+        deleteQuestionButton.backgroundColor = .black
+        deleteQuestionButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
+        deleteQuestionButton.layer.cornerRadius = 10
+        
+        selectionAnswerButton.backgroundColor = UIColor(red: 255.0 / 255.0, green: 193.0 / 255.0, blue: 46.0 / 255.0, alpha: 1.0)
+        selectionAnswerButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
+        selectionAnswerButton.layer.cornerRadius = 10
 
-        rootFlexContainer.flex.paddingBottom(20).define { (flex) in
-            flex.addItem(bgView).direction(.column).padding(12).define{ (flex) in
+        rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
+            flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
-                    flex.addItem(nameLabel).shrink(1)
+                    flex.addItem(questionLabel).shrink(1)
                     flex.addItem().direction(.row).define{ (flex) in
-                        flex.addItem(ParticipantsLabel)//.marginLeft(padding)//.grow(1)
-                        flex.addItem(iconImageView).size(30)//.marginRight(padding)
+                        flex.addItem(answerCountLabel)
+                        flex.addItem(iconImageView).size(30)
                     }
                 }
                 flex.addItem(detailView).direction(.column).define{ (flex) in
-                    flex.addItem(detailTopView).direction(.row).wrap(.wrap).define{ (flex) in
-                        for _ in 1...7 {
-//                            let iconImageView = UIImageView(image: UIImage(named: "icArrowDownGray"))
-//                            flex.addItem(iconImageView).size(50)
-                            
-                            let iconImage = UIImage(named: "icArrowDownGray")
-                            let deleteButton = UIButton()
-                            deleteButton.backgroundColor = .black
-                            deleteButton.setBackgroundImage(iconImage, for: .normal)
-//                            deleteButton.setTitle("삭제", for: .normal)
-//                            deleteButton.setTitleColor(.red, for: .normal)
-//                            deleteButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-                            deleteButton.layer.cornerRadius = 10
-                            flex.addItem(deleteButton).size(50)
-                        }
-                    }
+                    flex.addItem().height(10)
+                    flex.addItem(answerView).width(100%).height(50)
+                    flex.addItem().height(10)
                     flex.addItem(detailBottomView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
-                        flex.addItem(deleteButton).size(50)
+                        flex.addItem(deleteQuestionButton).size(40)
                         flex.addItem().width(10)
-                        flex.addItem(choiceButton).height(50).grow(1)
+                        flex.addItem(selectionAnswerButton).height(40).grow(1)
                     }
                 }
                 
@@ -126,23 +125,32 @@ class MyQuestionsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(method: Method) {
-        nameLabel.text = method.name
-        nameLabel.flex.markDirty()
+    func configure(question: Question) {
+        self.question = question
+        questionLabel.text = question.text
+        print("질문: \(question.text)")
+        let answererCount = question.answerer?.count
+        answerCountLabel.text = "\(answererCount)명참여중"
         
-        descriptionLabel.text = method.description
-        descriptionLabel.flex.markDirty()
+        questionLabel.flex.markDirty()
+        answerCountLabel.flex.markDirty()
+    }
+    
+    func configure(methods: Method) {
+        questionLabel.text = methods.name
+        print("질문: \(methods.name)")
+        questionLabel.flex.markDirty()
         
     }
     
     func isExpanded(_ isExpanded: Bool) {
         if isExpanded {
             detailView.flex.display(.flex)
-            iconImageView.image = UIImage(named: "icArrowUpGray")
+            iconImageView.image = CoffeeOverflowAsset.icArrowUpGray.image
             layout()
         } else {
             detailView.flex.display(.none)
-            iconImageView.image = UIImage(named: "icArrowDownGray")
+            iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
             layout()
         }
     }
@@ -165,5 +173,45 @@ class MyQuestionsCell: UITableViewCell {
         
         // Return the flex container new size
         return rootFlexContainer.frame.size
+    }
+}
+
+// MARK: UICollectionViewDelegate, UICollectionViewDataSource
+extension MyQuestionsCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return question?.answerer?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AnswerCell.reuseIdentifier, for: indexPath) as! AnswerCell
+        
+        if selectedIndexPathRow == indexPath.row {
+            cell.profileImageView.layer.borderColor = CoffeeOverflowAsset.primaryColor.color.cgColor
+        } else {
+            cell.profileImageView.layer.borderColor = UIColor.clear.cgColor
+        }
+        
+        let profileImage = question?.answerer?[indexPath.row].profileImage
+
+        if let data = try? Data(contentsOf: profileImage!) {
+            if let image = UIImage(data: data) {
+                cell.configure(data: image)
+            }
+        }
+        
+        let image = UIImage(systemName: "person") ?? UIImage() // tempImage
+        cell.configure(data: image)
+        
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 40, height: 40)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("답변자 선택 : \(indexPath.row)")
+        selectedIndexPathRow = indexPath.row
+        collectionView.reloadData()
     }
 }

@@ -15,6 +15,7 @@ import RxSwift
 
 class MainViewController: UIViewController, View {
 
+//    private var myQuestionsViewController: MyQuestionsViewController
     var disposeBag = DisposeBag()
     private var timer: Timer?
     
@@ -28,7 +29,9 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
     }
     
+//    init(reactor: MainReactor, myQuestionsViewController: MyQuestionsViewController) {
     init(reactor: MainReactor) {
+//        self.myQuestionsViewController = myQuestionsViewController
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }

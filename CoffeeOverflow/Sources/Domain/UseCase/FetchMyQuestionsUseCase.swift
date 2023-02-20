@@ -30,10 +30,12 @@ extension FetchMyQuestionsUseCase {
     }
 
     private func zipWithAnswerers(question: Question) -> Single<Question> {
+        let mySlackId = self.userReposiotry.fetchMySlackId()
         return self.questionsRepository.fetchAnswerOfQuestion(
             channel: question.channelId,
             timestamp: question.timestamp
         )
+        .map { $0.filter { $0 != mySlackId } }
         .flatMap { self.convertAnswersToUsers(answers: $0) }
         .map {
             var newQuestion = question
@@ -42,11 +44,11 @@ extension FetchMyQuestionsUseCase {
         }
     }
     
-    private func convertAnswersToUsers(answers: [Answer]) -> Single<[User]> {
+    private func convertAnswersToUsers(answers: [String]) -> Single<[User]> {
         return self.userReposiotry.fetchUsers()
             .map { users in
                 answers.map { answer in
-                    users.first { $0.slackId == answer.answererSlackId }
+                    users.first { $0.slackId == answer }
                 }
                 .compactMap { $0 }
             }

@@ -53,7 +53,7 @@ class QuestionsRepositoryImpl: QuestionsRepository {
         }
     }
 
-    func fetchAnswerOfQuestion(channel: String, timestamp: String) -> Single<[Answer]> {
+    func fetchAnswerOfQuestion(channel: String, timestamp: String) -> Single<[String]> {
         return self.slackDataSource.fetchConversaionsReplies(channel: channel, ts: timestamp)
             .map { $0.asAnswerArray() }
     }

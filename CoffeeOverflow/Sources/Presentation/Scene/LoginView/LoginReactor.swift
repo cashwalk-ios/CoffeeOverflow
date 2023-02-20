@@ -8,9 +8,15 @@
 
 import Foundation
 import ReactorKit
-import RxSwift
+import GoogleSignIn
 
 class LoginReactor: Reactor {
+
+    private let signInUseCase: SignInUseCase
+
+    init(signInUseCase: SignInUseCase) {
+        self.signInUseCase = signInUseCase
+    }
     
     private let signInUsecase: SignInUseCase
     private let checkSingInUsecase: CheckIsSignedInUseCase
@@ -18,6 +24,7 @@ class LoginReactor: Reactor {
     private var disposeBag = DisposeBag()
     
     enum Action {
+
         case checkSingIn
         case login
     }
@@ -39,13 +46,10 @@ class LoginReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .checkSingIn:
-            let isLogined = checkSingInUsecase.excute()
-            return .just(.setLoginState(isLogined))
-            
-        case .login:
-            return self.signInUsecase.excute(email: "choi.yeaju@cashwalk.io")
-                .andThen(.just(Mutation.setLoginState(true)))
+
+        case .googleSignin(let result):
+            return self.signInUseCase.excute(email: result.user.profile?.email ?? "")
+                .andThen(.just(Mutation.setSigninReslut(isSuccess: true)))
         }
     }
     
@@ -53,10 +57,10 @@ class LoginReactor: Reactor {
         var newState = state
         
         switch mutation {
-            
-        case let .setLoginState(isLogin):
-            newState.isLogin = isLogin
+        case .setSigninReslut(let isSuccess):
+            newState.isSigninSuccess = isSuccess
         }
         return newState
     }
+
 }
