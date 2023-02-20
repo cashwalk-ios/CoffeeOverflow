@@ -64,7 +64,7 @@ class LoginViewController: UIViewController, View {
         reactor.state.map { $0.isSigninSuccess }
             .subscribe(onNext: { [weak self] isSuccess in
                 guard let self else { return }
-                self.modalPresentationStyle = .fullScreen
+                self.mainViewController.modalPresentationStyle = .fullScreen
                 self.present(self.mainViewController, animated: true)
             })
             .disposed(by: self.disposeBag)

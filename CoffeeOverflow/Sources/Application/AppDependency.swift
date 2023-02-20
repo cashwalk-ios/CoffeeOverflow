@@ -10,7 +10,10 @@ import Foundation
 import FirebaseAuth
 
 struct AppDependency {
-    let viewController: MyQuestionsViewController
+    let checkIsSignedInUseCase: CheckIsSignedInUseCase
+
+    let loginViewController: LoginViewController
+    let mainViewController: MainViewController
 }
 
 extension AppDependency {
@@ -58,7 +61,8 @@ extension AppDependency {
         let mainReactor = MainReactor(
             confirmResponsedCoffeeUseCase: confirmResponsedCoffeeUseCase,
             requestCoffeeUseCase: requestCoffeeUseCase,
-            fetchMyCoffeePurchaserUseCase: fetchMyCoffeePurchaserUseCase
+            fetchMyCoffeePurchaserUseCase: fetchMyCoffeePurchaserUseCase,
+            fetchMyQuestionsUseCase: fetchMyQuestionsUseCase
             )
 
         let loginReactor = LoginReactor(signInUseCase: signInUseCase)
@@ -71,14 +75,18 @@ extension AppDependency {
             selectionAnswerUseCase: selectionAnswerUseCase,
             deleteQuestionUseCase: deleteQuestionUseCase
         )
-//        let mainViewController = MainViewController(reactor: mainReactor, myQuestionsViewController: myQuestionsViewController)
-        let mainViewController = MainViewController(reactor: mainReactor)
+
+        let mainViewController = MainViewController(reactor: mainReactor, questionVC: myQuestionsViewController)
         let loginViewController = LoginViewController(
             reactor: loginReactor,
             mainViewController: mainViewController
         )
         
 
-        return AppDependency(viewController: myQuestionsViewController)
+        return AppDependency(
+            checkIsSignedInUseCase: checkIsSignedInUseCase,
+            loginViewController: loginViewController,
+            mainViewController: mainViewController
+        )
     }
 }

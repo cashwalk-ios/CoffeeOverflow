@@ -18,6 +18,7 @@ class MainViewController: UIViewController, View {
 //    private var myQuestionsViewController: MyQuestionsViewController
     var disposeBag = DisposeBag()
     private var timer: Timer?
+    private var questionVC: MyQuestionsViewController
     
     fileprivate var mainView: MainView {
         return self.view as! MainView
@@ -30,8 +31,8 @@ class MainViewController: UIViewController, View {
     }
     
 //    init(reactor: MainReactor, myQuestionsViewController: MyQuestionsViewController) {
-    init(reactor: MainReactor) {
-//        self.myQuestionsViewController = myQuestionsViewController
+    init(reactor: MainReactor, questionVC: MyQuestionsViewController) {
+        self.questionVC = questionVC
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -43,6 +44,7 @@ class MainViewController: UIViewController, View {
     override func loadView() {
         view = MainView()
         view.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
+        reactor?.action.onNext(.fetchMyQuestion)
         reactor?.action.onNext(.fetch)
     }
     
@@ -51,15 +53,15 @@ class MainViewController: UIViewController, View {
         // MARK: Action
         mainView.collectionView.rx.itemSelected
             .withUnretained(self)
-             .subscribe(onNext: { vc, indexPath in
-                 reactor.action.onNext(.select(index: indexPath.row))
+            .subscribe(onNext: { vc, indexPath in
+                reactor.action.onNext(.select(index: indexPath.row))
             }).disposed(by: disposeBag)
         
         mainView.collectionView.rx.itemSelected
             .take(1)
             .withUnretained(self)
-             .subscribe(onNext: { vc, indexPath in
-                 vc.mainView.activateButtons()
+            .subscribe(onNext: { vc, indexPath in
+                vc.mainView.activateButtons()
             }).disposed(by: disposeBag)
         
         mainView.requestButton.rx.tap
@@ -85,8 +87,8 @@ class MainViewController: UIViewController, View {
             .subscribe { vc, count in
                 vc.mainView.cupsLabel.text = count
             }.disposed(by: disposeBag)
-          
-        reactor.state.map(\.isRequesting) 
+        
+        reactor.state.map(\.isRequesting)
             .distinctUntilChanged()
             .withUnretained(self)
             .subscribe { vc, isRequesting in
@@ -96,6 +98,15 @@ class MainViewController: UIViewController, View {
                     vc.timer?.invalidate()
                 }
                 vc.mainView.requestButton.isEnabled = !isRequesting
+            }.disposed(by: disposeBag)
+        
+        reactor.state.map(\.isShowQuestionView)
+            .filter { $0 }
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe { vc, _ in
+                self.modalPresentationStyle = .fullScreen
+                self.present(self.questionVC, animated: true)
             }.disposed(by: disposeBag)
     }
     
