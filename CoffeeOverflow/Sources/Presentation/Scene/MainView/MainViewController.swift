@@ -15,7 +15,6 @@ import RxSwift
 
 class MainViewController: UIViewController, View {
 
-//    private var myQuestionsViewController: MyQuestionsViewController
     var disposeBag = DisposeBag()
     private var timer: Timer?
     private var questionVC: MyQuestionsViewController
@@ -30,7 +29,6 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
     }
     
-//    init(reactor: MainReactor, myQuestionsViewController: MyQuestionsViewController) {
     init(reactor: MainReactor, questionVC: MyQuestionsViewController) {
         self.questionVC = questionVC
         super.init(nibName: nil, bundle: nil)
@@ -64,8 +62,9 @@ class MainViewController: UIViewController, View {
                 vc.mainView.activateButtons()
             }).disposed(by: disposeBag)
         
-        mainView.requestButton.rx.tap
-            .map{ Reactor.Action.requestCoffee }
+        mainView.requestButton.rx.tapGesture()
+            .when(.recognized )
+            .map{ _ in Reactor.Action.requestCoffee }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -114,9 +113,12 @@ class MainViewController: UIViewController, View {
         var leftTime = 300
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             print("leftTime : \(leftTime)")
+            guard let self else { return }
+            let timeStr = secondsToMinutesSecondString(leftTime)
+            self.mainView.requestButton.setTimeLabel(timeStr)
             leftTime -= 1
             if leftTime <= 0 {
-                self?.reactor?.action.onNext(.endRequestTimer)
+                self.reactor?.action.onNext(.endRequestTimer)
             }
         })
     }
@@ -128,4 +130,10 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 50)
     }
+}
+
+func secondsToMinutesSecondString(_ seconds: Int) -> String {
+    let min = (seconds % 3600) / 60
+    let sec = ((seconds % 3600) % 60)
+    return String(format: "%02d:%02d", min, sec)
 }

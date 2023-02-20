@@ -35,21 +35,16 @@ class MainView: UIView {
         return label
     }()
 
-    private(set) var requestButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle("Request", for: .normal)
-        button.backgroundColor = UIColor(red: 32/255, green: 32/255, blue: 32/255, alpha: 1)
-        button.setTitleColor(.white, for: .normal)
-        button.clipsToBounds = true
-        button.layer.cornerRadius = 10
+    private(set) var requestButton: RequestButton = {
+        let button = RequestButton()
         button.isHidden = true
-        button.setTitleColor(.blue, for: .disabled)
         return button
     }()
     
     private(set) var confirmButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("Confirm", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 20)
         button.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 46/255, alpha: 1)
         button.setTitleColor(.black, for: .normal)
         button.clipsToBounds = true
@@ -75,9 +70,9 @@ class MainView: UIView {
                 }
                 
             flex.addItem().direction(.columnReverse).marginHorizontal(22).define { flex in
-                flex.addItem().direction(.row).height(50).define { flex in
-                    flex.addItem(requestButton).grow(1).marginRight(15)
-                    flex.addItem(confirmButton).grow(1)
+                flex.addItem().direction(.row).justifyContent(.spaceBetween).height(50).define { flex in
+                    flex.addItem(requestButton).width(48%)
+                    flex.addItem(confirmButton).width(48%)
                 }
             }
         }
