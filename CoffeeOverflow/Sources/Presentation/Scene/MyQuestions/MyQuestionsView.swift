@@ -55,6 +55,7 @@ class MyQuestionsView: UIView {
         self.selectionAnswerUseCase = selectionAnswerUseCase
         self.deleteQuestionUseCase = deleteQuestionUseCase
         self.question = question
+        self.indexPaths = []
         tableView.reloadData()
     }
     
@@ -137,6 +138,7 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                         self.question.remove(at: indexPath.row)
                         self.tableViewReload()
                         if self.question.count == 0 {
+                            self.indexPaths = []
                             self.delegate?.dismissMyQuestionsVC()
                         }
                     })
