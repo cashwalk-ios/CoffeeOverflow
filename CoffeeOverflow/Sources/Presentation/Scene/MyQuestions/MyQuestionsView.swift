@@ -14,6 +14,7 @@ import RxCocoa
 
 protocol myQuestionsViewDelegate: NSObjectProtocol {
     func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell)
+    func dismissMyQuestionsVC()
 }
 
 class MyQuestionsView: UIView {
@@ -38,6 +39,7 @@ class MyQuestionsView: UIView {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 10
+        tableView.separatorStyle = .none
         tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
         tableView.register(MyQuestionsHeader.self, forHeaderFooterViewReuseIdentifier: MyQuestionsHeader.reuseIdentifier)
         tableView.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
@@ -134,6 +136,9 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                     .subscribe(onCompleted: {
                         self.question.remove(at: indexPath.row)
                         self.tableViewReload()
+                        if self.question.count == 0 {
+                            self.delegate?.dismissMyQuestionsVC()
+                        }
                     })
                     .disposed(by: cell.disposeBagCell)
             }.disposed(by: cell.disposeBagCell)

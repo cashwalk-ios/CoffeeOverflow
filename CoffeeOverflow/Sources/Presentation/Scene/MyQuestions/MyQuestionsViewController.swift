@@ -19,6 +19,10 @@ struct Method {
 }
 
 class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate {
+    func dismissMyQuestionsVC() {
+        self.dismiss(animated: true)
+    }
+    
     func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell) {
         let alertController = UIAlertController(title: "잠시만요!", message: "정말 아무도 채택하지 않고 삭제하실건가요?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in
