@@ -54,7 +54,7 @@ class MyQuestionsCell: UITableViewCell {
         answerView.collectionView.delegate = self
         answerView.collectionView.dataSource = self
         
-        iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
+        iconImageView.image = UIImage(systemName: "chevron.down")?.withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
         
         rootFlexContainer.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
         contentView.addSubview(rootFlexContainer)
@@ -76,7 +76,6 @@ class MyQuestionsCell: UITableViewCell {
         answerCountLabel.lineBreakMode = .byTruncatingTail
         answerCountLabel.text = "0명참여중"
         
-        
         var textString = ""
         if let temp = answerCountLabel.text {
             textString = temp
@@ -87,22 +86,26 @@ class MyQuestionsCell: UITableViewCell {
         answerCountLabel.attributedText = attributedStr
         
         deleteQuestionButton.backgroundColor = CoffeeOverflowAsset.gray2.color
-        deleteQuestionButton.setImage(CoffeeOverflowAsset.delete.image, for: .normal)
+        let deleteImage = UIImage(systemName: "trash.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal) ?? UIImage()
+        deleteQuestionButton.setImage(deleteImage, for: .normal)
         deleteQuestionButton.layer.cornerRadius = 10
         deleteQuestionButton.layer.borderColor = UIColor.white.cgColor
         deleteQuestionButton.layer.borderWidth = 0.5
         
         selectionAnswerButton.backgroundColor = CoffeeOverflowAsset.primaryColor.color
-        selectionAnswerButton.setImage(CoffeeOverflowAsset.choice.image, for: .normal)
+        let cohiceImage = UIImage(systemName: "checkmark")?.withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
+        selectionAnswerButton.setImage(cohiceImage, for: .normal)
         selectionAnswerButton.layer.cornerRadius = 10
 
         rootFlexContainer.flex.paddingLeft(20).paddingRight(20).paddingBottom(22).define { (flex) in
             flex.addItem(bgView).direction(.column).justifyContent(.center).padding(12).define{ (flex) in
                 flex.addItem(headerView).direction(.row).justifyContent(.spaceBetween).define{ (flex) in
                     flex.addItem(questionLabel).shrink(1)
-                    flex.addItem().direction(.row).define{ (flex) in
+                    flex.addItem().direction(.row).alignItems(.center).define{ (flex) in
+                        flex.addItem().width(5)
                         flex.addItem(answerCountLabel)
-                        flex.addItem(iconImageView).size(30)
+                        flex.addItem().width(5)
+                        flex.addItem(iconImageView).width(15).height(10)
                     }
                 }
                 flex.addItem(detailView).direction(.column).define{ (flex) in
@@ -151,11 +154,11 @@ class MyQuestionsCell: UITableViewCell {
     func isExpanded(_ isExpanded: Bool) {
         if isExpanded {
             detailView.flex.display(.flex)
-            iconImageView.image = CoffeeOverflowAsset.icArrowUpGray.image
+            iconImageView.image = UIImage(systemName: "chevron.up")?.withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
             layout()
         } else {
             detailView.flex.display(.none)
-            iconImageView.image = CoffeeOverflowAsset.icArrowDownGray.image
+            iconImageView.image = UIImage(systemName: "chevron.down")?.withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
             layout()
         }
     }
