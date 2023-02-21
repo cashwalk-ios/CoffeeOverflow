@@ -147,7 +147,6 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
 extension MyQuestionsView {
     func cellIsExpanded(at indexPath: IndexPath) -> Bool {
         return indexPaths.contains(indexPath)
