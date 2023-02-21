@@ -100,7 +100,7 @@ class MainViewController: UIViewController, View {
             .withUnretained(self)
             .subscribe { vc, isRequesting in
                 if isRequesting {
-                    vc.setTimer()
+                    reactor.action.onNext(.startTimer)
                 } else {
                     vc.timer?.invalidate()
                 }
@@ -115,20 +115,12 @@ class MainViewController: UIViewController, View {
                 self.modalPresentationStyle = .fullScreen
                 self.present(self.questionVC, animated: true)
             }.disposed(by: disposeBag)
-    }
-    
-    private func setTimer(){
-        var leftTime = 300
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
-            print("leftTime : \(leftTime)")
-            guard let self else { return }
-            let timeStr = secondsToMinutesSecondString(leftTime)
-            self.mainView.requestButton.setTimeLabel(timeStr)
-            leftTime -= 1
-            if leftTime <= 0 {
-                self.reactor?.action.onNext(.endRequestTimer)
-            }
-        })
+        
+        reactor.state.map(\.remainTime)
+            .withUnretained(self)
+            .subscribe { vc, timeStr in
+                vc.mainView.requestButton.setTimeLabel(timeStr)
+            }.disposed(by: disposeBag)
     }
 }
 
@@ -140,8 +132,3 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-func secondsToMinutesSecondString(_ seconds: Int) -> String {
-    let min = (seconds % 3600) / 60
-    let sec = ((seconds % 3600) % 60)
-    return String(format: "%02d:%02d", min, sec)
-}
