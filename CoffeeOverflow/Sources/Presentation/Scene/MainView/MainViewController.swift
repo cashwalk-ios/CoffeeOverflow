@@ -15,7 +15,6 @@ import RxSwift
 
 class MainViewController: UIViewController, View {
 
-//    private var myQuestionsViewController: MyQuestionsViewController
     var disposeBag = DisposeBag()
     private var timer: Timer?
     private var questionVC: MyQuestionsViewController
@@ -30,7 +29,6 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
     }
     
-//    init(reactor: MainReactor, myQuestionsViewController: MyQuestionsViewController) {
     init(reactor: MainReactor, questionVC: MyQuestionsViewController) {
         self.questionVC = questionVC
         super.init(nibName: nil, bundle: nil)
@@ -64,8 +62,9 @@ class MainViewController: UIViewController, View {
                 vc.mainView.activateButtons()
             }).disposed(by: disposeBag)
         
-        mainView.requestButton.rx.tap
-            .map{ Reactor.Action.requestCoffee }
+        mainView.requestButton.rx.tapGesture()
+            .when(.recognized )
+            .map{ _ in Reactor.Action.requestCoffee }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -77,7 +76,7 @@ class MainViewController: UIViewController, View {
         // MARK: State
         reactor.state.map(\.coffeePurchasers)
             .bind(to: mainView.collectionView.rx.items(cellIdentifier: ProfileCell.reuseIdentifier, cellType: ProfileCell.self)) { _, item, cell in
-                cell.configure(user: item.acceptedAnswerer)
+                cell.configure(user: item.user)
             }.disposed(by: disposeBag)
         
         reactor.state.map(\.coffeePurchasers)
@@ -88,12 +87,20 @@ class MainViewController: UIViewController, View {
                 vc.mainView.cupsLabel.text = count
             }.disposed(by: disposeBag)
         
+        reactor.state.map(\.coffeePurchasers)
+            .map { $0.count != 0 }
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe { vc, isExistCoffee in
+                vc.mainView.emptyLabel.isHidden = isExistCoffee
+            }.disposed(by: disposeBag)
+        
         reactor.state.map(\.isRequesting)
             .distinctUntilChanged()
             .withUnretained(self)
             .subscribe { vc, isRequesting in
                 if isRequesting {
-                    vc.setTimer()
+                    reactor.action.onNext(.startTimer)
                 } else {
                     vc.timer?.invalidate()
                 }
@@ -108,17 +115,12 @@ class MainViewController: UIViewController, View {
                 self.questionVC.isModalInPresentation = true
                 self.present(self.questionVC, animated: true)
             }.disposed(by: disposeBag)
-    }
-    
-    private func setTimer(){
-        var leftTime = 300
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
-            print("leftTime : \(leftTime)")
-            leftTime -= 1
-            if leftTime <= 0 {
-                self?.reactor?.action.onNext(.endRequestTimer)
-            }
-        })
+        
+        reactor.state.map(\.remainTime)
+            .withUnretained(self)
+            .subscribe { vc, timeStr in
+                vc.mainView.requestButton.setTimeLabel(timeStr)
+            }.disposed(by: disposeBag)
     }
 }
 
@@ -129,3 +131,4 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 50, height: 50)
     }
 }
+

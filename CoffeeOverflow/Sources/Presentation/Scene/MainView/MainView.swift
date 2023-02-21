@@ -35,27 +35,33 @@ class MainView: UIView {
         return label
     }()
 
-    private(set) var requestButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle("Request", for: .normal)
-        button.backgroundColor = UIColor(red: 32/255, green: 32/255, blue: 32/255, alpha: 1)
-        button.setTitleColor(.white, for: .normal)
-        button.clipsToBounds = true
-        button.layer.cornerRadius = 10
+    private(set) var requestButton: RequestButton = {
+        let button = RequestButton()
         button.isHidden = true
-        button.setTitleColor(.blue, for: .disabled)
         return button
     }()
     
     private(set) var confirmButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("Confirm", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 20)
         button.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 46/255, alpha: 1)
         button.setTitleColor(.black, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
         button.isHidden = true
         return button
+    }()
+    
+    private(set) var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "사용하실 수 있는 커피가 없어요.\n어서 좋은 답변자가 되어 커피를 얻어보세요!"
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = CoffeeOverflowAsset.gray3.color
+        label.sizeToFit()
+        return label
     }()
     
     init() {
@@ -75,13 +81,14 @@ class MainView: UIView {
                 }
                 
             flex.addItem().direction(.columnReverse).marginHorizontal(22).define { flex in
-                flex.addItem().direction(.row).height(50).define { flex in
-                    flex.addItem(requestButton).grow(1).marginRight(15)
-                    flex.addItem(confirmButton).grow(1)
+                flex.addItem().direction(.row).justifyContent(.spaceBetween).height(50).define { flex in
+                    flex.addItem(requestButton).width(48%)
+                    flex.addItem(confirmButton).width(48%)
                 }
             }
         }
         addSubview(rootFlexContainer)
+        addSubview(emptyLabel)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -102,6 +109,8 @@ class MainView: UIView {
         super.layoutSubviews()
         rootFlexContainer.pin.all(pin.safeArea)
         rootFlexContainer.flex.layout()
+        emptyLabel.pin.vCenter().hCenter()
+        emptyLabel.flex.layout()
     }
 }
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactorKit
+import RxSwift
 
 class MainReactor: Reactor {
     
@@ -23,6 +24,7 @@ class MainReactor: Reactor {
         case endRequestTimer
         case confirmRecived
         case select(index: Int)
+        case startTimer
     }
     
     enum Mutation {
@@ -30,6 +32,7 @@ class MainReactor: Reactor {
         case setRequestState(Bool)
         case setSelectedQuestion(Question)
         case setisShowQuestionView(Bool)
+        case setTimer(Int)
     }
     
     struct State {
@@ -37,6 +40,7 @@ class MainReactor: Reactor {
         var isRequesting: Bool = false // 요청중 상태
         var selectedQuestion: Question?
         var isShowQuestionView: Bool = false
+        var remainTime: String = ""
     }
     
     let initialState: State = State()
@@ -76,6 +80,10 @@ class MainReactor: Reactor {
                 .map { question in
                     Mutation.setisShowQuestionView(question.count != 0) }
                 .asObservable()
+        case .startTimer:
+            return self.activateTimer()
+                .map { Mutation.setTimer($0) }
+                .asObservable()
         }
     }
     
@@ -92,8 +100,37 @@ class MainReactor: Reactor {
             newState.selectedQuestion = question
         case let .setisShowQuestionView(isShow):
             newState.isShowQuestionView = isShow
+        case let .setTimer(time):
+            newState.remainTime = secondsToMinutesSecondString(time)
+            if time <= 0 {
+                newState.isRequesting = false
+            }
         }
         
         return newState
     }
+    
+    private func secondsToMinutesSecondString(_ seconds: Int) -> String {
+        let min = (seconds % 3600) / 60
+        let sec = ((seconds % 3600) % 60)
+        return String(format: "%02d:%02d", min, sec)
+    }
+}
+
+extension MainReactor {
+
+    private func activateTimer() -> Observable<Int> {
+        return Observable<Int>.create { observable in
+            var leftTime = 300
+            _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
+                leftTime -= 1
+                observable.onNext(leftTime)
+                if leftTime <= 0 {
+                    timer.invalidate()
+                }
+            })
+            return Disposables.create()
+        }
+    }
+
 }

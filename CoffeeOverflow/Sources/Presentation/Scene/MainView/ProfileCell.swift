@@ -19,11 +19,11 @@ class ProfileCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.layer.borderWidth = 2
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 20
         return imageView
     }()
     
-    override var isSelected: Bool {
+    override var isHighlighted: Bool {
             didSet{
                 if isSelected {
                     profileImageView.layer.borderColor = CoffeeOverflowAsset.primaryColor.color.cgColor
