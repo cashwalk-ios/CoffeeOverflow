@@ -18,6 +18,7 @@ class MainViewController: UIViewController, View {
     var disposeBag = DisposeBag()
     private var timer: Timer?
     private var questionVC: MyQuestionsViewController
+    private var isViewWillAppear = false
     
     fileprivate var mainView: MainView {
         return self.view as! MainView
@@ -31,6 +32,12 @@ class MainViewController: UIViewController, View {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        isViewWillAppear = true
+        if let reactor = self.reactor {
+            bind(reactor: reactor)
+        }
+        reactor?.action.onNext(.fetchMyQuestion)
+        reactor?.action.onNext(.fetch)
         mainView.showActivityIndicator()
     }
     
@@ -47,11 +54,10 @@ class MainViewController: UIViewController, View {
     override func loadView() {
         view = MainView()
         view.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
-        reactor?.action.onNext(.fetchMyQuestion)
-        reactor?.action.onNext(.fetch)
     }
     
     func bind(reactor: MainReactor) {
+        guard self.isViewWillAppear else { return }
         
         // MARK: Action
         mainView.collectionView.rx.itemSelected

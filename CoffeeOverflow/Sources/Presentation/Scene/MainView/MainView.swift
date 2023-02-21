@@ -64,7 +64,7 @@ class MainView: UIView {
         return label
     }()
     
-    var activityView: UIActivityIndicatorView?
+    var activityView = UIActivityIndicatorView(style: .large)
     
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -91,6 +91,7 @@ class MainView: UIView {
         }
         addSubview(rootFlexContainer)
         addSubview(emptyLabel)
+        addSubview(activityView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -108,17 +109,11 @@ class MainView: UIView {
     }
     
     func showActivityIndicator() {
-        activityView = UIActivityIndicatorView(style: .large)
-        activityView?.center = self.center
-        addSubview(activityView!)
-        activityView?.pin.hCenter().top(200)
-        activityView?.startAnimating()
+        activityView.startAnimating()
     }
 
     func hideActivityIndicator(){
-        if (activityView != nil) {
-            activityView?.stopAnimating()
-        }
+        activityView.stopAnimating()
     }
 
     override func layoutSubviews() {
@@ -127,6 +122,7 @@ class MainView: UIView {
         rootFlexContainer.flex.layout()
         emptyLabel.pin.vCenter().hCenter()
         emptyLabel.flex.layout()
+        activityView.pin.hCenter().top(200)
     }
 }
 
