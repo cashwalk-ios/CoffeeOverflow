@@ -58,6 +58,7 @@ class MainViewController: UIViewController, View {
         mainView.collectionView.rx.itemSelected
             .take(1)
             .withUnretained(self)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { vc, indexPath in
                 vc.mainView.activateButtons()
             }).disposed(by: disposeBag)
@@ -118,6 +119,7 @@ class MainViewController: UIViewController, View {
         
         reactor.state.map(\.remainTime)
             .withUnretained(self)
+            .observe(on: MainScheduler.instance)
             .subscribe { vc, timeStr in
                 vc.mainView.requestButton.setTimeLabel(timeStr)
             }.disposed(by: disposeBag)
