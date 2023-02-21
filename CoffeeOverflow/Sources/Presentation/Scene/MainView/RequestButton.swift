@@ -20,7 +20,8 @@ class RequestButton: UIButton {
     
     private var checkImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = CoffeeOverflowAsset.icChecked.image
+        imageView.image = UIImage(systemName: "checkmark")
+        imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFit
         imageView.isHidden = true
         return imageView
