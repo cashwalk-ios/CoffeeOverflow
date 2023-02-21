@@ -115,7 +115,8 @@ class MainViewController: UIViewController, View {
                 vc.mainView.requestButton.isEnabled = !isRequesting
             }.disposed(by: disposeBag)
         
-        reactor.state.map(\.isShowQuestionView)
+        reactor.pulse(\.$isShowQuestionView)
+            .compactMap { $0 }
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .withUnretained(self)

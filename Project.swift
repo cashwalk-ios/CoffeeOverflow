@@ -48,9 +48,14 @@ let project = Project(
             .googleSingIn,
             .rxGesture
         ],
-    settings: .settings(configurations: [
-        .debug(name: "Debug", xcconfig: .relativeToRoot("Configuration/env.xcconfig")),
-        .release(name: "Release", xcconfig: .relativeToRoot("Configuration/env.xcconfig"))
-    ]),
+    settings: .settings(
+        base: SettingsDictionary()
+            .codeSignIdentityAppleDevelopment()
+            .automaticCodeSigning(devTeam: "TTF9NC4TZ7"),
+        configurations: [
+            .debug(name: "Debug", xcconfig: .relativeToRoot("Configuration/env.xcconfig")),
+            .release(name: "Release", xcconfig: .relativeToRoot("Configuration/env.xcconfig"))
+        ]
+    ),
     targets: [target]
 )
