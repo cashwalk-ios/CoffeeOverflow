@@ -36,9 +36,9 @@ class MainReactor: Reactor {
     }
     
     struct State {
-        var coffeePurchasers: [Question] = [Question]()
+        @Pulse var coffeePurchasers: [Question] = [Question]()
         var isRequesting: Bool = false // 요청중 상태
-        var selectedQuestion: Question?
+        @Pulse var selectedQuestion: Question?
         var isShowQuestionView: Bool = false
         var remainTime: String = ""
     }
