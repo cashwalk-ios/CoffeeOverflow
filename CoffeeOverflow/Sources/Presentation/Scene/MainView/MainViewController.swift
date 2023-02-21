@@ -29,6 +29,11 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        mainView.showActivityIndicator()
+    }
+    
     init(reactor: MainReactor, questionVC: MyQuestionsViewController) {
         self.questionVC = questionVC
         super.init(nibName: nil, bundle: nil)
@@ -53,6 +58,8 @@ class MainViewController: UIViewController, View {
             .withUnretained(self)
             .subscribe(onNext: { vc, indexPath in
                 reactor.action.onNext(.select(index: indexPath.row))
+                let cell = vc.mainView.collectionView.cellForItem(at: indexPath)
+                cell?.isSelected.toggle()
             }).disposed(by: disposeBag)
         
         mainView.collectionView.rx.itemSelected
@@ -75,12 +82,12 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         // MARK: State
-        reactor.state.map(\.coffeePurchasers)
+        reactor.pulse(\.$coffeePurchasers)
             .bind(to: mainView.collectionView.rx.items(cellIdentifier: ProfileCell.reuseIdentifier, cellType: ProfileCell.self)) { _, item, cell in
                 cell.configure(user: item.user)
             }.disposed(by: disposeBag)
         
-        reactor.state.map(\.coffeePurchasers)
+        reactor.pulse(\.$coffeePurchasers)
             .map { "\($0.count)" }
             .withUnretained(self)
             .observe(on: MainScheduler.instance)
@@ -88,7 +95,7 @@ class MainViewController: UIViewController, View {
                 vc.mainView.cupsLabel.text = count
             }.disposed(by: disposeBag)
         
-        reactor.state.map(\.coffeePurchasers)
+        reactor.pulse(\.$coffeePurchasers)
             .map { $0.count != 0 }
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
@@ -122,6 +129,14 @@ class MainViewController: UIViewController, View {
             .observe(on: MainScheduler.instance)
             .subscribe { vc, timeStr in
                 vc.mainView.requestButton.setTimeLabel(timeStr)
+            }.disposed(by: disposeBag)
+        
+        reactor.state.map(\.loaded)
+            .filter { $0 }
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe { vc, isLoading in
+                vc.mainView.hideActivityIndicator()
             }.disposed(by: disposeBag)
     }
 }

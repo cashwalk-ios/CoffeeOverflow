@@ -64,6 +64,8 @@ class MainView: UIView {
         return label
     }()
     
+    var activityView: UIActivityIndicatorView?
+    
     init() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         super.init(frame: .zero)
@@ -103,6 +105,20 @@ class MainView: UIView {
     func activateButtons(){
         self.confirmButton.isHidden = false
         self.requestButton.isHidden = false
+    }
+    
+    func showActivityIndicator() {
+        activityView = UIActivityIndicatorView(style: .large)
+        activityView?.center = self.center
+        addSubview(activityView!)
+        activityView?.pin.hCenter().top(200)
+        activityView?.startAnimating()
+    }
+
+    func hideActivityIndicator(){
+        if (activityView != nil) {
+            activityView?.stopAnimating()
+        }
     }
 
     override func layoutSubviews() {
