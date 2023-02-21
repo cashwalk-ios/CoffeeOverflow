@@ -33,6 +33,7 @@ class MainReactor: Reactor {
         case setSelectedQuestion(Question)
         case setisShowQuestionView(Bool)
         case setTimer(Int)
+        case setLoading(Bool)
     }
     
     struct State {
@@ -41,6 +42,7 @@ class MainReactor: Reactor {
         @Pulse var selectedQuestion: Question?
         var isShowQuestionView: Bool = false
         var remainTime: String = ""
+        var loaded: Bool = false
     }
     
     let initialState: State = State()
@@ -58,9 +60,14 @@ class MainReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetch:
-            return fetchMyCoffeePurchaserUseCase.excute()
+            let coffees =  fetchMyCoffeePurchaserUseCase.excute()
                 .map { Mutation.setMySelectedQuestions($0) }
                 .asObservable()
+            
+            return Observable.concat([
+                coffees,
+                .just(.setLoading(true))
+            ])
         case .requestCoffee:
             guard let question = currentState.selectedQuestion else { return .empty()}
             return requestCoffeeUseCase.excute(question: question)
@@ -105,8 +112,9 @@ class MainReactor: Reactor {
             if time <= 0 {
                 newState.isRequesting = false
             }
+        case let .setLoading(value):
+            newState.loaded = value
         }
-        
         return newState
     }
     

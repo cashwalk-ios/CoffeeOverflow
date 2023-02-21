@@ -29,6 +29,11 @@ class MainViewController: UIViewController, View {
             .disposed(by: disposeBag)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        mainView.showActivityIndicator()
+    }
+    
     init(reactor: MainReactor, questionVC: MyQuestionsViewController) {
         self.questionVC = questionVC
         super.init(nibName: nil, bundle: nil)
@@ -124,6 +129,14 @@ class MainViewController: UIViewController, View {
             .observe(on: MainScheduler.instance)
             .subscribe { vc, timeStr in
                 vc.mainView.requestButton.setTimeLabel(timeStr)
+            }.disposed(by: disposeBag)
+        
+        reactor.state.map(\.loaded)
+            .filter { $0 }
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe { vc, isLoading in
+                vc.mainView.hideActivityIndicator()
             }.disposed(by: disposeBag)
     }
 }
