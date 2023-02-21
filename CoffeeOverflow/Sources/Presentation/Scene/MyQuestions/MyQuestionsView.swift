@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 protocol myQuestionsViewDelegate: NSObjectProtocol {
-    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question)
+    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell)
 }
 
 class MyQuestionsView: UIView {
@@ -28,20 +28,19 @@ class MyQuestionsView: UIView {
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let disposeBagCell = DisposeBag()
     
     weak var delegate: myQuestionsViewDelegate?
     
     init() {
         super.init(frame: .zero)
-        self.backgroundColor = .black
+        self.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
 
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 10
         tableView.register(MyQuestionsCell.self, forCellReuseIdentifier: MyQuestionsCell.reuseIdentifier)
         tableView.register(MyQuestionsHeader.self, forHeaderFooterViewReuseIdentifier: MyQuestionsHeader.reuseIdentifier)
-        tableView.backgroundColor = .black
+        tableView.backgroundColor = CoffeeOverflowAsset.backgroundColor.color
         addSubview(tableView)
     }
     
@@ -60,6 +59,13 @@ class MyQuestionsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         tableView.pin.all(safeAreaInsets)
+    }
+    
+    func tableViewReload() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            print("reloadDaata")
+        }
     }
 }
 
@@ -112,8 +118,8 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
             .bind { [weak self] (_) in
                 guard let self = self else {return}
                 print("삭제버튼")
-                self.delegate?.deleteQuestionButtonClicked(self, question: question)
-            }.disposed(by: disposeBag)
+                self.delegate?.deleteQuestionButtonClicked(self, question: question, cell: cell)
+            }.disposed(by: cell.disposeBagCell)
         
         cell.selectionAnswerButton.rx.tap
             .bind { [weak self] (_) in
@@ -125,9 +131,12 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                 }
                 print(answer.email)
                 self.selectionAnswerUseCase?.excute(question: question, answer: answer)
-                    .subscribe()
-                    .disposed(by: self.disposeBagCell)
-            }.disposed(by: disposeBag)
+                    .subscribe(onCompleted: {
+                        self.question.remove(at: indexPath.row)
+                        self.tableViewReload()
+                    })
+                    .disposed(by: cell.disposeBagCell)
+            }.disposed(by: cell.disposeBagCell)
         
         return cell
     }
@@ -136,7 +145,6 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
         return UITableView.automaticDimension
     }
 }
-
 
 extension MyQuestionsView {
     func cellIsExpanded(at indexPath: IndexPath) -> Bool {

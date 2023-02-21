@@ -19,7 +19,8 @@ class AnswerCell: UICollectionViewCell {
         imageView.backgroundColor = .black
         imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.layer.borderWidth = 2
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 15.0
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -32,8 +33,8 @@ class AnswerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(data: UIImage) {
-        profileImageView.image = data
+    func configure(data: URL) {
+        profileImageView.load(url: data)
     }
     
     private func setUI() {

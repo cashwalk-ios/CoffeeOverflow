@@ -19,7 +19,7 @@ struct Method {
 }
 
 class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate {
-    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question) {
+    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell) {
         let alertController = UIAlertController(title: "잠시만요!", message: "정말 아무도 채택하지 않고 삭제하실건가요?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in
             print("삭제취소 누름")
@@ -27,8 +27,10 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         let okAction = UIAlertAction(title: "삭제", style: .default) { _ in
             print("삭제버튼 누름")
             self.deleteQuestionUseCase?.excute(question: question)
-                .subscribe()
-                .disposed(by: self.disposeBag)
+                .subscribe(onCompleted: {
+                    self.setMyQuestions()
+                })
+                .disposed(by: cell.disposeBagCell)
         }
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)
@@ -48,6 +50,7 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setMyQuestions()
     }
     
     override func loadView() {
@@ -61,20 +64,25 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         self.fetchMyQuestionsUseCase = fetchMyQuestionsUseCase
         self.selectionAnswerUseCase = selectionAnswerUseCase
         self.deleteQuestionUseCase = deleteQuestionUseCase
-        
+    }
+    
+    fileprivate func setMyQuestions() {
         guard let selectionAnswerUseCase = self.selectionAnswerUseCase, let deleteQuestionUseCase = self.deleteQuestionUseCase else {return}
         
         self.fetchMyQuestionsUseCase?.excute()
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { questions in
-                print("questions: ", questions)
-                self.myQuestionsView.configure(question: questions, selectionAnswerUseCase: selectionAnswerUseCase, deleteQuestionUseCase: deleteQuestionUseCase)
+                print("questions: ", questions.count)
+                if questions.count > 0 {
+                    self.myQuestionsView.configure(question: questions, selectionAnswerUseCase: selectionAnswerUseCase, deleteQuestionUseCase: deleteQuestionUseCase)
+                } else {
+                    self.dismiss(animated: true)
+                }
             }, onFailure: { error in
                 print("Error: ", error)
             })
             .disposed(by: disposeBag)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
