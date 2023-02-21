@@ -19,7 +19,7 @@ struct Method {
 }
 
 class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate {
-    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question) {
+    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell) {
         let alertController = UIAlertController(title: "잠시만요!", message: "정말 아무도 채택하지 않고 삭제하실건가요?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in
             print("삭제취소 누름")
@@ -28,10 +28,9 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
             print("삭제버튼 누름")
             self.deleteQuestionUseCase?.excute(question: question)
                 .subscribe(onCompleted: {
-                    self.setUseCase()
-                    view.tableViewReload()
+                    self.setMyQuestions()
                 })
-                .disposed(by: view.disposeBagCell)
+                .disposed(by: cell.disposeBagCell)
         }
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)
@@ -51,7 +50,7 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUseCase()
+        self.setMyQuestions()
     }
     
     override func loadView() {
@@ -67,7 +66,7 @@ class MyQuestionsViewController: UIViewController, View, myQuestionsViewDelegate
         self.deleteQuestionUseCase = deleteQuestionUseCase
     }
     
-    fileprivate func setUseCase() {
+    fileprivate func setMyQuestions() {
         guard let selectionAnswerUseCase = self.selectionAnswerUseCase, let deleteQuestionUseCase = self.deleteQuestionUseCase else {return}
         
         self.fetchMyQuestionsUseCase?.excute()

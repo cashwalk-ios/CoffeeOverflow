@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 protocol myQuestionsViewDelegate: NSObjectProtocol {
-    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question)
+    func deleteQuestionButtonClicked(_ view: MyQuestionsView, question: Question, cell: MyQuestionsCell)
 }
 
 class MyQuestionsView: UIView {
@@ -28,7 +28,6 @@ class MyQuestionsView: UIView {
     fileprivate var selectionAnswerUseCase: SelectionAnswerUseCase?
     fileprivate var deleteQuestionUseCase: DeleteQuestionUseCase?
     fileprivate let disposeBag = DisposeBag()
-    let disposeBagCell = DisposeBag()
     
     weak var delegate: myQuestionsViewDelegate?
     
@@ -119,8 +118,8 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
             .bind { [weak self] (_) in
                 guard let self = self else {return}
                 print("삭제버튼")
-                self.delegate?.deleteQuestionButtonClicked(self, question: question)
-            }.disposed(by: disposeBag)
+                self.delegate?.deleteQuestionButtonClicked(self, question: question, cell: cell)
+            }.disposed(by: cell.disposeBagCell)
         
         cell.selectionAnswerButton.rx.tap
             .bind { [weak self] (_) in
@@ -136,8 +135,8 @@ extension MyQuestionsView: UITableViewDelegate, UITableViewDataSource {
                         self.question.remove(at: indexPath.row)
                         self.tableViewReload()
                     })
-                    .disposed(by: self.disposeBagCell)
-            }.disposed(by: disposeBag)
+                    .disposed(by: cell.disposeBagCell)
+            }.disposed(by: cell.disposeBagCell)
         
         return cell
     }

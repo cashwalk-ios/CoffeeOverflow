@@ -9,6 +9,7 @@
 import UIKit
 import PinLayout
 import FlexLayout
+import RxSwift
 
 class MyQuestionsCell: UITableViewCell {
     
@@ -29,6 +30,7 @@ class MyQuestionsCell: UITableViewCell {
     var selectionAnswerButton = UIButton()
     fileprivate var answerView = AnswerView()
     fileprivate var question: Question?
+    var disposeBagCell = DisposeBag()
     
     fileprivate var indexPaths: Set<IndexPath> = []
     
@@ -42,6 +44,11 @@ class MyQuestionsCell: UITableViewCell {
                 isExpanded(false)
             }
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBagCell = DisposeBag()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
